@@ -1,41 +1,203 @@
+// prisma/schema.prisma
+
 generator client {
-  provider = "prisma-client"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = "file:./dev.db"
+  provider = "postgresql"
+  url      = env("DB_URL")
 }
 
+// --- ENUMS ---
+enum UserRole {
+  CLIENT
+  THERAPIST
+  ADMIN
+}
+
+enum SubscriptionTier {
+  BASIC 
+  PREMIUM 
+  ELITE 
+}
+
+enum SessionStatus {
+  SCHEDULED
+  COMPLETED
+  CANCELLED
+  NO_SHOW
+}
+
+enum DisorderType {
+  ANXIETY_DISORDERS
+  MOOD_DISORDERS
+  TRAUMA_AND_STRESSOR
+  NEURODEVELOPMENTAL
+  SUBSTANCE_RELATED
+  BEHAVIORAL_ADDICTIONS
+  OBSESSIVE_COMPULSIVE
+  EATING_DISORDERS
+  PERSONALITY_DISORDERS
+  DISRUPTIVE_IMPULSE_CONTROL
+  SOMATIC_SYMPTOM
+  NEUROCOGNITIVE
+  DISSOCIATIVE_DISORDERS
+  GENDER_DYSPHORIA
+  SLEEP_DISORDERS
+}
+
+// --- USER MANAGEMENT ---
 model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
-  name      String?
-  role      String   @default("CLIENT") // CLIENT, PROVIDER, ADMIN
-  createdAt DateTime @default(now())
-  
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  fullName     String?  @map("full_name")
+  role         UserRole @default(CLIENT)
+  isActive     Boolean  @default(true) @map("is_active")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  // Relations
+  clientProfile    ClientProfile?
   therapistProfile TherapistProfile?
-  clientMatches    Match[] @relation("ClientMatches")
-  providerMatches  Match[] @relation("ProviderMatches")
+  sentMessages     ChatMessage[]     @relation("SentMessages")
+  receivedMessages ChatMessage[]     @relation("ReceivedMessages")
+
+  @@map("users")
 }
 
+// --- PROFILES & SUBSCRIPTIONS ---
 model TherapistProfile {
-  id        String   @id @default(uuid())
-  userId    String   @unique
-  user      User     @relation(fields: [userId], references: [id])
-  bio       String
-  specialties String 
-  rating    Float    @default(0.0)
-  insuranceVerified Boolean @default(false)
+  id     String  @id @default(uuid())
+  userId String  @unique @map("user_id")
+  user   User    @relation(fields: [userId], references: [id])
+  bio    String?
+
+  // Professional Details
+  specialties     DisorderType[]
+  yearsExperience Int?           @map("years_experience")
+  licenseNumber   String?        @map("license_number")
+
+  // REVENUE MODEL
+  subscriptionTier     SubscriptionTier @default(BASIC) @map("subscription_tier")
+  stripeCustomerId     String?          @map("stripe_customer_id")
+  stripeSubscriptionId String?          @map("stripe_subscription_id")
+  isSubscriptionActive Boolean          @default(false) @map("is_subscription_active")
+
+  // Visibility Logic
+  rankingScore Int @default(0) @map("ranking_score")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  // Relations
+  sessions TherapySession[]
+  reviews  Review[]
+
+  @@map("therapist_profiles")
 }
 
-model Match {
-  id        String   @id @default(uuid())
-  clientId  String
-  client    User     @relation("ClientMatches", fields: [clientId], references: [id])
-  providerId String
-  provider  User     @relation("ProviderMatches", fields: [providerId], references: [id])
-  status    String   @default("PENDING") // PENDING, APPROVED, REJECTED
-  algorithmScore Int
-  createdAt DateTime @default(now())
+model ClientProfile {
+  id          String    @id @default(uuid())
+  userId      String    @unique @map("user_id")
+  user        User      @relation(fields: [userId], references: [id])
+  dateOfBirth DateTime? @map("date_of_birth") // Changed to DateTime for Prisma
+
+  // Matching Data
+  severityScore   Int?          @map("severity_score")
+  primaryDisorder DisorderType? @map("primary_disorder")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  // Relations
+  responses ClientResponse[]
+  sessions  TherapySession[]
+  reviews   Review[]
+
+  @@map("client_profiles")
+}
+
+// --- CLINICAL QUESTIONNAIRE ---
+model Question {
+  id           String       @id @default(uuid())
+  questionText String       @map("question_text")
+  category     DisorderType
+  weight       Int          @default(1)
+  orderIndex   Int?         @map("order_index")
+
+  options   QuestionOption[]
+  responses ClientResponse[]
+
+  @@map("questions")
+}
+
+model QuestionOption {
+  id         String   @id @default(uuid())
+  questionId String   @map("question_id")
+  question   Question @relation(fields: [questionId], references: [id])
+  optionText String   @map("option_text")
+  scoreValue Int      @map("score_value")
+
+  responses ClientResponse[]
+
+  @@map("question_options")
+}
+
+model ClientResponse {
+  id               String         @id @default(uuid())
+  clientId         String         @map("client_id")
+  client           ClientProfile  @relation(fields: [clientId], references: [id])
+  questionId       String         @map("question_id")
+  question         Question       @relation(fields: [questionId], references: [id])
+  selectedOptionId String         @map("selected_option_id")
+  selectedOption   QuestionOption @relation(fields: [selectedOptionId], references: [id])
+  recordedAt       DateTime       @default(now()) @map("recorded_at")
+
+  @@map("client_responses")
+}
+
+// --- CORE FEATURES: SESSIONS & CHAT ---
+model TherapySession {
+  id          String           @id @default(uuid())
+  therapistId String           @map("therapist_id")
+  therapist   TherapistProfile @relation(fields: [therapistId], references: [id])
+  clientId    String           @map("client_id")
+  client      ClientProfile    @relation(fields: [clientId], references: [id])
+  startTime   DateTime         @map("start_time")
+  endTime     DateTime         @map("end_time")
+  status      SessionStatus    @default(SCHEDULED)
+  meetingLink String?          @map("meeting_link")
+
+  // Optional: Link to Chat messages if they are session-specific
+  messages ChatMessage[]
+
+  @@map("therapy_sessions")
+}
+
+model ChatMessage {
+  id          String          @id @default(uuid())
+  sessionId   String?         @map("session_id")
+  session     TherapySession? @relation(fields: [sessionId], references: [id])
+  senderId    String          @map("sender_id")
+  sender      User            @relation("SentMessages", fields: [senderId], references: [id])
+  recipientId String          @map("recipient_id")
+  recipient   User            @relation("ReceivedMessages", fields: [recipientId], references: [id])
+  content     String
+  isRead      Boolean         @default(false) @map("is_read")
+  createdAt   DateTime        @default(now()) @map("created_at")
+
+  @@map("chat_messages")
+}
+
+// --- REVIEWS ---
+model Review {
+  id          String           @id @default(uuid())
+  therapistId String           @map("therapist_id")
+  therapist   TherapistProfile @relation(fields: [therapistId], references: [id])
+  clientId    String           @map("client_id")
+  client      ClientProfile    @relation(fields: [clientId], references: [id])
+  rating      Int
+  comment     String?
+  createdAt   DateTime         @default(now()) @map("created_at")
+
+  @@map("reviews")
 }
