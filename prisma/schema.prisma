@@ -1,0 +1,41 @@
+generator client {
+  provider = "prisma-client"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  name      String?
+  role      String   @default("CLIENT") // CLIENT, PROVIDER, ADMIN
+  createdAt DateTime @default(now())
+  
+  therapistProfile TherapistProfile?
+  clientMatches    Match[] @relation("ClientMatches")
+  providerMatches  Match[] @relation("ProviderMatches")
+}
+
+model TherapistProfile {
+  id        String   @id @default(uuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id])
+  bio       String
+  specialties String 
+  rating    Float    @default(0.0)
+  insuranceVerified Boolean @default(false)
+}
+
+model Match {
+  id        String   @id @default(uuid())
+  clientId  String
+  client    User     @relation("ClientMatches", fields: [clientId], references: [id])
+  providerId String
+  provider  User     @relation("ProviderMatches", fields: [providerId], references: [id])
+  status    String   @default("PENDING") // PENDING, APPROVED, REJECTED
+  algorithmScore Int
+  createdAt DateTime @default(now())
+}
