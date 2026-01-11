@@ -10,92 +10,194 @@ datasource db {
 }
 
 // --- ENUMS ---
-enum Role {
-  PATIENT
+enum UserRole {
+  CLIENT
   THERAPIST
   ADMIN
 }
 
-enum Tier {
-  BASIC    // Standard visibility
-  PREMIUM  // 2x visibility multiplier
-  ELITE    // 5x visibility multiplier + Top of list
+enum SubscriptionTier {
+  BASIC 
+  PREMIUM 
+  ELITE 
+}
+
+enum SessionStatus {
+  SCHEDULED
+  COMPLETED
+  CANCELLED
+  NO_SHOW
 }
 
 enum DisorderType {
-  ANXIETY
-  DEPRESSION
-  ADHD
-  PTSD
-  BIPOLAR
-  EATING_DISORDER
-  ADDICTION
-  OCD
-  SCHIZOPHRENIA
-  POSTPARTUM
+  ANXIETY_DISORDERS
+  MOOD_DISORDERS
+  TRAUMA_AND_STRESSOR
+  NEURODEVELOPMENTAL
+  SUBSTANCE_RELATED
+  BEHAVIORAL_ADDICTIONS
+  OBSESSIVE_COMPULSIVE
+  EATING_DISORDERS
+  PERSONALITY_DISORDERS
+  DISRUPTIVE_IMPULSE_CONTROL
+  SOMATIC_SYMPTOM
+  NEUROCOGNITIVE
+  DISSOCIATIVE_DISORDERS
   GENDER_DYSPHORIA
-  // Add other categories from your PDF
+  SLEEP_DISORDERS
 }
 
-// --- USERS ---
+// --- USER MANAGEMENT ---
 model User {
-  id            String    @id @default(uuid())
-  email         String    @unique
-  passwordHash  String
-  role          Role      @default(PATIENT)
-  createdAt     DateTime  @default(now())
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  fullName     String?  @map("full_name")
+  role         UserRole @default(CLIENT)
+  isActive     Boolean  @default(true) @map("is_active")
+  createdAt    DateTime @default(now()) @map("created_at")
 
   // Relations
-  patientProfile   PatientProfile?
+  clientProfile    ClientProfile?
   therapistProfile TherapistProfile?
+  sentMessages     ChatMessage[]     @relation("SentMessages")
+  receivedMessages ChatMessage[]     @relation("ReceivedMessages")
+
+  @@map("users")
 }
 
-// --- THERAPISTS (The Revenue Source) ---
+// --- PROFILES & SUBSCRIPTIONS ---
 model TherapistProfile {
-  id            String   @id @default(uuid())
-  userId        String   @unique
-  user          User     @relation(fields: [userId], references: [id])
-  
-  bio           String?
-  specialties   DisorderType[]  // Array of disorders they treat
-  
-  // Subscription Model
-  subscriptionTier   Tier      @default(BASIC)
-  stripeCustomerId   String?
-  stripeSubscriptionId String?
-  subscriptionActive Boolean   @default(false)
-  
-  // Metrics for "Visibility"
-  rankingScore       Int       @default(0) // Logic: Tier Weight + Rating + Response Time
-  
-  createdAt     DateTime @default(now())
+  id     String  @id @default(uuid())
+  userId String  @unique @map("user_id")
+  user   User    @relation(fields: [userId], references: [id])
+  bio    String?
+
+  // Professional Details
+  specialties     DisorderType[]
+  yearsExperience Int?           @map("years_experience")
+  licenseNumber   String?        @map("license_number")
+
+  // REVENUE MODEL
+  subscriptionTier     SubscriptionTier @default(BASIC) @map("subscription_tier")
+  stripeCustomerId     String?          @map("stripe_customer_id")
+  stripeSubscriptionId String?          @map("stripe_subscription_id")
+  isSubscriptionActive Boolean          @default(false) @map("is_subscription_active")
+
+  // Visibility Logic
+  rankingScore Int @default(0) @map("ranking_score")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  // Relations
+  sessions TherapySession[]
+  reviews  Review[]
+
+  @@map("therapist_profiles")
 }
 
-// --- PATIENTS ---
-model PatientProfile {
-  id            String   @id @default(uuid())
-  userId        String   @unique
-  user          User     @relation(fields: [userId], references: [id])
-  
-  // Results from the questionnaire
-  suspectedDisorders DisorderType[] 
-  severityScore      Int            // 1-100 scale
+model ClientProfile {
+  id          String    @id @default(uuid())
+  userId      String    @unique @map("user_id")
+  user        User      @relation(fields: [userId], references: [id])
+  dateOfBirth DateTime? @map("date_of_birth") // Changed to DateTime for Prisma
+
+  // Matching Data
+  severityScore   Int?          @map("severity_score")
+  primaryDisorder DisorderType? @map("primary_disorder")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  // Relations
+  responses ClientResponse[]
+  sessions  TherapySession[]
+  reviews   Review[]
+
+  @@map("client_profiles")
 }
 
-// --- QUESTIONNAIRE LOGIC ---
+// --- CLINICAL QUESTIONNAIRE ---
 model Question {
-  id            String        @id @default(uuid())
-  text          String        // e.g., "How often do you feel little interest in doing things?"
-  category      DisorderType  // e.g., DEPRESSION
-  weight        Int           // How much this question counts towards the diagnosis
-  
-  options       QuestionOption[]
+  id           String       @id @default(uuid())
+  questionText String       @map("question_text")
+  category     DisorderType
+  weight       Int          @default(1)
+  orderIndex   Int?         @map("order_index")
+
+  options   QuestionOption[]
+  responses ClientResponse[]
+
+  @@map("questions")
 }
 
 model QuestionOption {
   id         String   @id @default(uuid())
-  questionId String
+  questionId String   @map("question_id")
   question   Question @relation(fields: [questionId], references: [id])
-  text       String   // e.g., "Nearly every day"
-  score      Int      // e.g., 3
+  optionText String   @map("option_text")
+  scoreValue Int      @map("score_value")
+
+  responses ClientResponse[]
+
+  @@map("question_options")
+}
+
+model ClientResponse {
+  id               String         @id @default(uuid())
+  clientId         String         @map("client_id")
+  client           ClientProfile  @relation(fields: [clientId], references: [id])
+  questionId       String         @map("question_id")
+  question         Question       @relation(fields: [questionId], references: [id])
+  selectedOptionId String         @map("selected_option_id")
+  selectedOption   QuestionOption @relation(fields: [selectedOptionId], references: [id])
+  recordedAt       DateTime       @default(now()) @map("recorded_at")
+
+  @@map("client_responses")
+}
+
+// --- CORE FEATURES: SESSIONS & CHAT ---
+model TherapySession {
+  id          String           @id @default(uuid())
+  therapistId String           @map("therapist_id")
+  therapist   TherapistProfile @relation(fields: [therapistId], references: [id])
+  clientId    String           @map("client_id")
+  client      ClientProfile    @relation(fields: [clientId], references: [id])
+  startTime   DateTime         @map("start_time")
+  endTime     DateTime         @map("end_time")
+  status      SessionStatus    @default(SCHEDULED)
+  meetingLink String?          @map("meeting_link")
+
+  // Optional: Link to Chat messages if they are session-specific
+  messages ChatMessage[]
+
+  @@map("therapy_sessions")
+}
+
+model ChatMessage {
+  id          String          @id @default(uuid())
+  sessionId   String?         @map("session_id")
+  session     TherapySession? @relation(fields: [sessionId], references: [id])
+  senderId    String          @map("sender_id")
+  sender      User            @relation("SentMessages", fields: [senderId], references: [id])
+  recipientId String          @map("recipient_id")
+  recipient   User            @relation("ReceivedMessages", fields: [recipientId], references: [id])
+  content     String
+  isRead      Boolean         @default(false) @map("is_read")
+  createdAt   DateTime        @default(now()) @map("created_at")
+
+  @@map("chat_messages")
+}
+
+// --- REVIEWS ---
+model Review {
+  id          String           @id @default(uuid())
+  therapistId String           @map("therapist_id")
+  therapist   TherapistProfile @relation(fields: [therapistId], references: [id])
+  clientId    String           @map("client_id")
+  client      ClientProfile    @relation(fields: [clientId], references: [id])
+  rating      Int
+  comment     String?
+  createdAt   DateTime         @default(now()) @map("created_at")
+
+  @@map("reviews")
 }
