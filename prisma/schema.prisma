@@ -1,41 +1,101 @@
+// prisma/schema.prisma
+
 generator client {
-  provider = "prisma-client"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = "file:./dev.db"
+  provider = "postgresql"
+  url      = env("DB_URL")
 }
 
+// --- ENUMS ---
+enum Role {
+  PATIENT
+  THERAPIST
+  ADMIN
+}
+
+enum Tier {
+  BASIC    // Standard visibility
+  PREMIUM  // 2x visibility multiplier
+  ELITE    // 5x visibility multiplier + Top of list
+}
+
+enum DisorderType {
+  ANXIETY
+  DEPRESSION
+  ADHD
+  PTSD
+  BIPOLAR
+  EATING_DISORDER
+  ADDICTION
+  OCD
+  SCHIZOPHRENIA
+  POSTPARTUM
+  GENDER_DYSPHORIA
+  // Add other categories from your PDF
+}
+
+// --- USERS ---
 model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
-  name      String?
-  role      String   @default("CLIENT") // CLIENT, PROVIDER, ADMIN
-  createdAt DateTime @default(now())
-  
+  id            String    @id @default(uuid())
+  email         String    @unique
+  passwordHash  String
+  role          Role      @default(PATIENT)
+  createdAt     DateTime  @default(now())
+
+  // Relations
+  patientProfile   PatientProfile?
   therapistProfile TherapistProfile?
-  clientMatches    Match[] @relation("ClientMatches")
-  providerMatches  Match[] @relation("ProviderMatches")
 }
 
+// --- THERAPISTS (The Revenue Source) ---
 model TherapistProfile {
-  id        String   @id @default(uuid())
-  userId    String   @unique
-  user      User     @relation(fields: [userId], references: [id])
-  bio       String
-  specialties String 
-  rating    Float    @default(0.0)
-  insuranceVerified Boolean @default(false)
+  id            String   @id @default(uuid())
+  userId        String   @unique
+  user          User     @relation(fields: [userId], references: [id])
+  
+  bio           String?
+  specialties   DisorderType[]  // Array of disorders they treat
+  
+  // Subscription Model
+  subscriptionTier   Tier      @default(BASIC)
+  stripeCustomerId   String?
+  stripeSubscriptionId String?
+  subscriptionActive Boolean   @default(false)
+  
+  // Metrics for "Visibility"
+  rankingScore       Int       @default(0) // Logic: Tier Weight + Rating + Response Time
+  
+  createdAt     DateTime @default(now())
 }
 
-model Match {
-  id        String   @id @default(uuid())
-  clientId  String
-  client    User     @relation("ClientMatches", fields: [clientId], references: [id])
-  providerId String
-  provider  User     @relation("ProviderMatches", fields: [providerId], references: [id])
-  status    String   @default("PENDING") // PENDING, APPROVED, REJECTED
-  algorithmScore Int
-  createdAt DateTime @default(now())
+// --- PATIENTS ---
+model PatientProfile {
+  id            String   @id @default(uuid())
+  userId        String   @unique
+  user          User     @relation(fields: [userId], references: [id])
+  
+  // Results from the questionnaire
+  suspectedDisorders DisorderType[] 
+  severityScore      Int            // 1-100 scale
+}
+
+// --- QUESTIONNAIRE LOGIC ---
+model Question {
+  id            String        @id @default(uuid())
+  text          String        // e.g., "How often do you feel little interest in doing things?"
+  category      DisorderType  // e.g., DEPRESSION
+  weight        Int           // How much this question counts towards the diagnosis
+  
+  options       QuestionOption[]
+}
+
+model QuestionOption {
+  id         String   @id @default(uuid())
+  questionId String
+  question   Question @relation(fields: [questionId], references: [id])
+  text       String   // e.g., "Nearly every day"
+  score      Int      // e.g., 3
 }
