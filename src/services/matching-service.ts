@@ -2,7 +2,7 @@ import prisma from "@/lib/prisma";
 import { DisorderType, Tier } from "@prisma/client";
 
 export async function matchTherapist(userAnswers: Record<string, number>) {
-  
+
   // 1. ANALYZE SYMPTOMS
   // If user scores high on "Anxiety" questions, tag them with ANXIETY.
 
@@ -14,7 +14,7 @@ export async function matchTherapist(userAnswers: Record<string, number>) {
       specialties: {
         hasSome: detectedDisorders // Must match at least one suspected disorder
       },
-      subscriptionActive: true // Only show paying therapists
+      isSubscriptionActive: true // Only show paying therapists
     },
     include: {
       user: { select: { fullName: true } } // Get their name

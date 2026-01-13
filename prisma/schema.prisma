@@ -1,12 +1,12 @@
 // prisma/schema.prisma
 
 generator client {
-  provider = "prisma-client-js"
+  provider = "prisma-client"
+  output   = "../src/generated/client"
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DB_URL")
 }
 
 // --- ENUMS ---
@@ -17,9 +17,9 @@ enum UserRole {
 }
 
 enum SubscriptionTier {
-  BASIC 
-  PREMIUM 
-  ELITE 
+  BASIC
+  PREMIUM
+  ELITE
 }
 
 enum SessionStatus {
