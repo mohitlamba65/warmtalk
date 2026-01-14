@@ -1,0 +1,119 @@
+{
+  "info": {
+    "name": "WarmTalk API Tests",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Submit Questionnaire - High Depression",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/questionnaire",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "questionnaire"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"responses\": {\n    \"73b39151-049d-445e-a92c-fa697d3ac651\": \"177b5e4e-27c8-4f82-9e1f-cf5626ed5468\",\n    \"7391a807-fd2b-4fde-b936-bab83c7fdc36\": \"7679428e-c067-4a43-9d5c-71dbf9aff7eb\",\n    \"8af962cf-c77f-40f3-8be6-a9e1b53575ac\": \"3efe7b06-0867-4923-961d-88e7f062a720\",\n    \"e20cadfe-ad25-480f-89a7-8bb02fc5c401\": \"4ad2280a-5633-4c54-8773-82beaf8adeec\",\n    \"026fe7cd-00a4-45f2-8981-869d5c6950b3\": \"0f7d5068-dbb2-4c9e-8a2d-e649236a03ca\",\n    \"64c2b9b0-c32a-49de-920a-8e2d9f952dc6\": \"870a8699-9404-4518-85b5-1877aac161bb\",\n    \"0d0d68e3-1690-444a-b54d-99e6eefc5eed\": \"ab8ca4be-4166-4551-b0fa-15b2e4987bd3\",\n    \"a5986375-0cc0-4fb7-8cf9-b8d21738e633\": \"abe609d6-e3ac-4025-a3c0-5c70a5f5abc2\",\n    \"c66b0576-210e-413c-acb3-e428fa5afc28\": \"8ea7c1f2-f416-4e97-b892-3bcd52f71ee2\",\n    \"d0271e0a-9123-45a8-8104-65d25530c9b1\": \"33b4b04b-5a1c-4706-8b49-035574d8626b\",\n    \"598fa2c4-f573-41ff-b59c-e627de0eabf1\": \"140aff4b-2002-4f71-8604-671fe75ffd26\",\n    \"c1faec9f-d894-4866-ae31-a32206108780\": \"2a924552-8676-404d-a185-0dfbee130a33\",\n    \"39fe2249-5374-404f-8bd4-c2158a0b1443\": \"78db5ac0-d5c8-469f-b52c-9d62fa53de71\",\n    \"7aca8e4a-0e22-428b-97a8-282b3a2c8290\": \"77dc89fa-88fa-4ae4-a29b-1abc27681994\"\n  }\n}"
+        }
+      }
+    },
+    {
+      "name": "Submit Questionnaire - High Anxiety",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/questionnaire",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "questionnaire"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"responses\": {\n    \"73b39151-049d-445e-a92c-fa697d3ac651\": \"002090fc-8603-4c00-9000-7ba4fd52b26d\",\n    \"7391a807-fd2b-4fde-b936-bab83c7fdc36\": \"451cddbb-fc68-499f-89ff-7fb9c3cb591f\",\n    \"8af962cf-c77f-40f3-8be6-a9e1b53575ac\": \"1bf480d3-ab81-4129-b170-5e386317abcf\",\n    \"e20cadfe-ad25-480f-89a7-8bb02fc5c401\": \"8487de1c-5d01-4566-893e-90a66138d8ad\",\n    \"026fe7cd-00a4-45f2-8981-869d5c6950b3\": \"0fc62318-5987-4687-92ff-5010b4faed91\",\n    \"64c2b9b0-c32a-49de-920a-8e2d9f952dc6\": \"d827a820-b143-4867-88c3-87b76dcb13ca\",\n    \"0d0d68e3-1690-444a-b54d-99e6eefc5eed\": \"ab8ca4be-4166-4551-b0fa-15b2e4987bd3\",\n    \"a5986375-0cc0-4fb7-8cf9-b8d21738e633\": \"abe609d6-e3ac-4025-a3c0-5c70a5f5abc2\",\n    \"c66b0576-210e-413c-acb3-e428fa5afc28\": \"8ea7c1f2-f416-4e97-b892-3bcd52f71ee2\",\n    \"d0271e0a-9123-45a8-8104-65d25530c9b1\": \"33b4b04b-5a1c-4706-8b49-035574d8626b\",\n    \"598fa2c4-f573-41ff-b59c-e627de0eabf1\": \"140aff4b-2002-4f71-8604-671fe75ffd26\",\n    \"c1faec9f-d894-4866-ae31-a32206108780\": \"2a924552-8676-404d-a185-0dfbee130a33\",\n    \"39fe2249-5374-404f-8bd4-c2158a0b1443\": \"78db5ac0-d5c8-469f-b52c-9d62fa53de71\",\n    \"7aca8e4a-0e22-428b-97a8-282b3a2c8290\": \"77dc89fa-88fa-4ae4-a29b-1abc27681994\"\n  }\n}"
+        }
+      }
+    },
+    {
+      "name": "Submit Questionnaire - Healthy (Low Scores)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/questionnaire",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "questionnaire"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"responses\": {\n    \"73b39151-049d-445e-a92c-fa697d3ac651\": \"002090fc-8603-4c00-9000-7ba4fd52b26d\",\n    \"7391a807-fd2b-4fde-b936-bab83c7fdc36\": \"451cddbb-fc68-499f-89ff-7fb9c3cb591f\",\n    \"8af962cf-c77f-40f3-8be6-a9e1b53575ac\": \"1bf480d3-ab81-4129-b170-5e386317abcf\",\n    \"e20cadfe-ad25-480f-89a7-8bb02fc5c401\": \"4ad2280a-5633-4c54-8773-82beaf8adeec\",\n    \"026fe7cd-00a4-45f2-8981-869d5c6950b3\": \"0f7d5068-dbb2-4c9e-8a2d-e649236a03ca\",\n    \"64c2b9b0-c32a-49de-920a-8e2d9f952dc6\": \"870a8699-9404-4518-85b5-1877aac161bb\",\n    \"0d0d68e3-1690-444a-b54d-99e6eefc5eed\": \"ab8ca4be-4166-4551-b0fa-15b2e4987bd3\",\n    \"a5986375-0cc0-4fb7-8cf9-b8d21738e633\": \"abe609d6-e3ac-4025-a3c0-5c70a5f5abc2\",\n    \"c66b0576-210e-413c-acb3-e428fa5afc28\": \"8ea7c1f2-f416-4e97-b892-3bcd52f71ee2\",\n    \"d0271e0a-9123-45a8-8104-65d25530c9b1\": \"33b4b04b-5a1c-4706-8b49-035574d8626b\",\n    \"598fa2c4-f573-41ff-b59c-e627de0eabf1\": \"140aff4b-2002-4f71-8604-671fe75ffd26\",\n    \"c1faec9f-d894-4866-ae31-a32206108780\": \"2a924552-8676-404d-a185-0dfbee130a33\",\n    \"39fe2249-5374-404f-8bd4-c2158a0b1443\": \"78db5ac0-d5c8-469f-b52c-9d62fa53de71\",\n    \"7aca8e4a-0e22-428b-97a8-282b3a2c8290\": \"77dc89fa-88fa-4ae4-a29b-1abc27681994\"\n  }\n}"
+        }
+      }
+    },
+    {
+      "name": "Submit Questionnaire - Empty Body (Error)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/questionnaire",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "questionnaire"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"responses\": {}\n}"
+        }
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    }
+  ]
+}
