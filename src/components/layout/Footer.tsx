@@ -1,11 +1,22 @@
 import Link from "next/link";
+import Image from "next/image";
 
 export function Footer() {
     return (
         <footer className="w-full border-t bg-soft-bg/50 py-12 md:py-16 lg:py-20">
             <div className="container mx-auto px-4 grid gap-8 md:grid-cols-2 lg:grid-cols-4">
                 <div className="flex flex-col gap-2">
-                    <span className="font-serif text-xl font-bold text-brand-green">WarmTalk</span>
+                    <div className="flex items-center gap-2">
+                        <div className="relative w-48 h-20">
+                            <Image
+                                src="/logo.svg"
+                                alt="WarmTalk"
+                                fill
+                                className="object-contain"
+                            />
+                        </div>
+                        <span className="text-sm text-brand-green/60 hidden">WarmTalk.org</span>
+                    </div>
                     <p className="text-sm text-muted-foreground">
                         Connecting you with the right support, warmly and securely.
                     </p>

@@ -18,7 +18,8 @@
   --color-sidebar: var(--sidebar);
   --color-brand-orange: #F39200;
   --color-brand-green: #1D3C34;
-  --color-soft-bg: #F9F7F2;
+  --color-soft-bg: #E6F4F1;
+  --color-background: #FFFFFF;
   --color-chart-5: var(--chart-5);
   --color-chart-4: var(--chart-4);
   --color-chart-3: var(--chart-3);
@@ -122,6 +123,7 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
