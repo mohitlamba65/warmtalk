@@ -1,8 +1,8 @@
-import prisma from "@/lib/prisma";
-import { DisorderType, Tier } from "@prisma/client";
+import { prisma } from "@/lib/prisma";
+import { DisorderType, SubscriptionTier } from "@prisma/client";
 
 export async function matchTherapist(userAnswers: Record<string, number>) {
-  
+
   // 1. ANALYZE SYMPTOMS
   // If user scores high on "Anxiety" questions, tag them with ANXIETY.
 
@@ -14,7 +14,7 @@ export async function matchTherapist(userAnswers: Record<string, number>) {
       specialties: {
         hasSome: detectedDisorders // Must match at least one suspected disorder
       },
-      subscriptionActive: true // Only show paying therapists
+      isSubscriptionActive: true // Only show paying therapists
     },
     include: {
       user: { select: { fullName: true } } // Get their name
@@ -25,9 +25,9 @@ export async function matchTherapist(userAnswers: Record<string, number>) {
   // Elite shows first, then Premium, then Basic.
   const rankedResults = matchedTherapists.sort((a, b) => {
     const tierWeight = {
-      [Tier.ELITE]: 3,
-      [Tier.PREMIUM]: 2,
-      [Tier.BASIC]: 1
+      [SubscriptionTier.ELITE]: 3,
+      [SubscriptionTier.PREMIUM]: 2,
+      [SubscriptionTier.BASIC]: 1
     };
     return tierWeight[b.subscriptionTier] - tierWeight[a.subscriptionTier];
   });
