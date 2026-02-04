@@ -36,5 +36,5 @@ export async function matchTherapist(userAnswers: Record<string, number>) {
 }
 
 function determineDisorders(answers: any) {
-  return [DisorderType.ANXIETY];
+  return [DisorderType.ANXIETY_DISORDERS];
 }
