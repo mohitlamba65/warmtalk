@@ -9,32 +9,34 @@ export default function Home() {
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero Section */}
-      <section className="relative px-6 py-12 md:py-24 lg:py-32 overflow-hidden">
-        <div className="container mx-auto grid lg:grid-cols-2 gap-12 items-center">
-          <div className="space-y-6 text-center lg:text-left z-10 max-w-2xl">
-            <h1 className="text-5xl md:text-7xl font-serif font-bold text-brand-green leading-[1.1]">
-              Therapy that <br />
-              feels like home
-            </h1>
-            <p className="text-lg md:text-xl text-brand-green/80 max-w-lg mx-auto lg:mx-0 leading-relaxed">
-              No algorithmic matching. Real human connections. Start your journey with a free 5-minute 'Vibe Check' video call.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-4">
-              <Button asChild size="lg" className="bg-brand-orange hover:bg-orange-600 text-white font-bold rounded-full px-10 h-14 text-lg shadow-lg hover:shadow-xl transition-all">
-                <Link href="/auth/register">Get Started</Link>
-              </Button>
+      <section className="relative px-6 py-12 md:py-24 lg:py-32">
+        <div className="container mx-auto max-w-7xl">
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+            <div className="space-y-6 text-center lg:text-left">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-brand-green leading-tight">
+                Therapy that <br />
+                feels like home
+              </h1>
+              <p className="text-base md:text-lg text-brand-green/80 max-w-lg mx-auto lg:mx-0 leading-relaxed">
+                No algorithmic matching. Real human connections. Start your journey with a free 5-minute 'Vibe Check' video call.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-4">
+                <Button asChild size="lg" className="bg-brand-orange hover:bg-orange-600 text-white font-bold rounded-full px-10 h-14 text-lg shadow-lg hover:shadow-xl transition-all">
+                  <Link href="/auth/register">Get Started</Link>
+                </Button>
+              </div>
             </div>
-          </div>
 
-          {/* Hero Image */}
-          <div className="relative mx-auto w-full lg:w-[120%] lg:-mr-[20%] aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl">
-            <Image
-              src="/images/hero.png"
-              alt="Woman smiling at laptop"
-              fill
-              className="object-cover"
-              priority
-            />
+            {/* Hero Image */}
+            <div className="relative w-full aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl">
+              <Image
+                src="/images/hero.png"
+                alt="Woman smiling at laptop"
+                fill
+                className="object-cover"
+                priority
+              />
+            </div>
           </div>
         </div>
       </section>
