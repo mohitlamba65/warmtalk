@@ -28,7 +28,7 @@ export function DashboardNavbar() {
             <div className="container mx-auto flex items-center justify-between">
                 {/* Logo */}
                 <Link href="/" className="flex items-center gap-2">
-                    <div className="relative w-60 h-20">
+                    <div className="relative w-32 h-10">
                         <Image
                             src="/logo.svg"
                             alt="WarmTalk"
@@ -45,8 +45,8 @@ export function DashboardNavbar() {
                             key={item.name}
                             href={item.href}
                             className={`transition-colors ${isActive(item.href)
-                                    ? "text-brand-green font-bold"
-                                    : "hover:text-brand-green"
+                                ? "text-brand-green font-bold"
+                                : "hover:text-brand-green"
                                 }`}
                         >
                             {item.name}
@@ -57,19 +57,19 @@ export function DashboardNavbar() {
                 {/* User Profile */}
                 <div className="flex items-center gap-4">
                     <Button variant="ghost" size="icon" className="text-gray-400 hover:text-brand-green relative">
-                        <Bell className="w-5 h-5" />
+                        <Bell className="w-6 h-6" />
                         <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
                     </Button>
                     <div className="flex items-center gap-3 pl-4 border-l border-gray-100">
-                        <Avatar className="h-9 w-9 bg-brand-orange/10">
-                            <AvatarFallback className="text-brand-orange font-bold text-sm">AY</AvatarFallback>
+                        <Avatar className="h-10 w-10 bg-brand-orange/10">
+                            <AvatarFallback className="text-brand-orange font-bold text-base">MO</AvatarFallback>
                         </Avatar>
                         <div className="hidden md:block">
-                            <p className="text-sm font-bold text-gray-900 leading-none">Ayush</p>
+                            <p className="text-sm font-bold text-gray-900 leading-none">Mohit</p>
                             <p className="text-xs text-muted-foreground">Premium Plan</p>
                         </div>
                         <Link href="/auth/login" className="ml-4 text-gray-400 hover:text-red-500 transition-colors" title="Log Out">
-                            <LogOut className="w-5 h-5" />
+                            <LogOut className="w-6 h-6" />
                         </Link>
                     </div>
                 </div>

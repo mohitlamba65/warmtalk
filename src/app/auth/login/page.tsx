@@ -17,12 +17,12 @@ export default function LoginPage() {
 
     const handleLogin = (e: React.FormEvent) => {
         e.preventDefault();
-        if (username === "Ayush" && password === "Ayush123") {
+        if (username === "Mohit" && password === "Mohit123") {
             router.push("/dashboard");
         } else if (username === "provider" && password === "provider123") {
             router.push("/provider");
         } else {
-            setError("Invalid credentials. Try 'Ayush'/'Ayush123' or 'provider'/'provider123'");
+            setError("Invalid credentials. Try 'Mohit'/'Mohit123' or 'provider'/'provider123'");
         }
     };
 
@@ -41,7 +41,7 @@ export default function LoginPage() {
                         <Label htmlFor="username">Username</Label>
                         <Input
                             id="username"
-                            placeholder="Ayush"
+                            placeholder="Mohit"
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
                             className="rounded-xl border-gray-200 bg-white"
@@ -56,7 +56,7 @@ export default function LoginPage() {
                         <Input
                             id="password"
                             type="password"
-                            placeholder="Ayush123"
+                            placeholder="Mohit123"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             className="rounded-xl border-gray-200 bg-white"
@@ -80,8 +80,8 @@ export default function LoginPage() {
                 <p className="text-brand-green/60 text-sm font-medium">Demo Credentials:</p>
                 <div className="flex flex-col gap-2 mt-2 items-center">
                     <div className="flex gap-4 text-xs text-gray-500 bg-white/50 px-4 py-2 rounded-full border border-white/40">
-                        <span>User: <span className="font-mono font-bold">Ayush</span></span>
-                        <span>Pass: <span className="font-mono font-bold">Ayush123</span></span>
+                        <span>User: <span className="font-mono font-bold">Mohit</span></span>
+                        <span>Pass: <span className="font-mono font-bold">Mohit123</span></span>
                     </div>
                     <div className="flex gap-4 text-xs text-gray-500 bg-white/50 px-4 py-2 rounded-full border border-white/40">
                         <span>Provider: <span className="font-mono font-bold">provider</span></span>

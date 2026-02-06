@@ -80,7 +80,7 @@ export default function MessagesPage() {
                     </div>
                     <div className="flex justify-start">
                         <div className="bg-white border border-gray-100 text-gray-700 p-3 rounded-2xl rounded-tl-sm max-w-[80%] text-sm shadow-sm">
-                            Hi Ayush! Yes, that works perfectly for me. See you at 10:30 AM instead.
+                            Hi Mohit! Yes, that works perfectly for me. See you at 10:30 AM instead.
                         </div>
                     </div>
                     <div className="flex justify-end">

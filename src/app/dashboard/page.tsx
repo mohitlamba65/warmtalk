@@ -21,7 +21,7 @@ export default function DashboardPage() {
         <div className="space-y-8">
             {/* Header */}
             <div>
-                <h1 className="text-3xl font-serif font-bold text-brand-green">Good Morning, Ayush.</h1>
+                <h1 className="text-3xl font-serif font-bold text-brand-green">Good Morning, Mohit.</h1>
                 <p className="text-muted-foreground mt-1">Your mental wellness journey is progressing well. Here is your overview for today.</p>
             </div>
 
