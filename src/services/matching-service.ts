@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/prisma";
+import { prisma } from "@/infrastructure/database/prisma";
 import { DisorderType, SubscriptionTier } from "@prisma/client";
 
 export async function matchTherapist(userAnswers: Record<string, number>) {
