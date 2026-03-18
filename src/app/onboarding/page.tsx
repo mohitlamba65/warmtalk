@@ -138,7 +138,7 @@ export default function OnboardingPage() {
                                 <ChevronLeft className="mr-2 h-4 w-4" /> Back
                             </Button>
                             <Button
-                                variant="accent"
+                                className="bg-brand-orange hover:bg-orange-600 text-white"
                                 size="lg"
                                 onClick={handleNext}
                                 disabled={(step === 1 && !location) || (step === 2 && selectedReasons.length === 0)}

@@ -1,11 +1,7 @@
-
-import { signIn, signOut } from "@/auth";
-import { AuthError } from "next-auth";
-
 export async function signInWithGoogle() {
-    await signIn("google");
+    throw new Error("Use client-side signIn.social({ provider: 'google' }) instead.");
 }
 
 export async function handleSignOut() {
-    await signOut();
+    throw new Error("Use authClient.signOut() instead.");
 }
