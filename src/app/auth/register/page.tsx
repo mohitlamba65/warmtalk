@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
-import { useState } from "react";
+import { useState} from "react";
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 
@@ -18,6 +18,7 @@ export default function RegisterPage() {
     const [isGooglePending, setIsGooglePending] = useState(false);
 
     const router = useRouter();
+
 
     const handleSignUp = async (e: React.FormEvent) => {
         e.preventDefault();

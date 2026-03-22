@@ -3,9 +3,10 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { Bell, LogOut } from "lucide-react";
+import { Bell } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import Logout from "@/components/logout/Logout"; // Add this import
 
 const NAV_ITEMS = [
     { name: "Dashboard", href: "/dashboard" },
@@ -68,9 +69,7 @@ export function DashboardNavbar() {
                             <p className="text-sm font-bold text-gray-900 leading-none">Mohit</p>
                             <p className="text-xs text-muted-foreground">Premium Plan</p>
                         </div>
-                        <Link href="/auth/login" className="ml-4 text-gray-400 hover:text-red-500 transition-colors" title="Log Out">
-                            <LogOut className="w-6 h-6" />
-                        </Link>
+                        <Logout />
                     </div>
                 </div>
             </div>

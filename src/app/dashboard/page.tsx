@@ -15,13 +15,23 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 
-export default function DashboardPage() {
+export default async function DashboardPage() {
+    const session = await auth.api.getSession({
+        headers: await headers()
+    });
+    console.log(" session", session);
+    if(!session) {
+        redirect("/auth/login");
+    }
     return (
         <div className="space-y-8">
             {/* Header */}
             <div>
-                <h1 className="text-3xl font-serif font-bold text-brand-green">Good Morning, Mohit.</h1>
+                <h1 className="text-3xl font-serif font-bold text-brand-green">Welcome, {session.user?.name}!</h1>
                 <p className="text-muted-foreground mt-1">Your mental wellness journey is progressing well. Here is your overview for today.</p>
             </div>
 

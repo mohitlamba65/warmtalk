@@ -4,6 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 
 interface TherapistCardProps {
     id: string;
@@ -19,9 +22,16 @@ interface TherapistCardProps {
     languages: string[];
 }
 
-export function TherapistCard({
+export async function TherapistCard({
     id, name, title, rating, reviewCount, bio, tags, nextAvailable, price, imageUrl, languages
 }: TherapistCardProps) {
+
+    const session = await auth.api.getSession({
+        headers: await headers()
+    })
+    if (!session) {
+        redirect("/auth/login");
+    }
     return (
         <Card className="overflow-hidden border-none shadow-sm hover:shadow-md transition-all bg-white rounded-3xl p-6 flex flex-col h-full">
             {/* Header */}

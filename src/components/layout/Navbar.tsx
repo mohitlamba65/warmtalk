@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import Logout from "../logout/Logout";
 
 export function Navbar() {
   return (
@@ -32,6 +33,7 @@ export function Navbar() {
           <Button asChild className="rounded-full bg-brand-orange hover:bg-orange-600 text-white font-bold px-6 h-10 shadow-md">
             <Link href="/auth/register">Get Started</Link>
           </Button>
+          <Logout />
         </div>
       </div>
     </nav>
