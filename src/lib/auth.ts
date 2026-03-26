@@ -12,6 +12,16 @@ export const auth = betterAuth({
   database: prismaAdapter(prisma, {
     provider: "postgresql",
   }),
+  user:{
+    additionalFields:{
+      role:{
+        type: ["CLIENT", "THERAPIST", "ADMIN"],
+        required: true,
+        defaultValue: "CLIENT",
+        input: true
+      }
+    }
+  },
   emailAndPassword: { 
     enabled: true, 
   }, 
@@ -20,8 +30,13 @@ export const auth = betterAuth({
     google: {
       clientId: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
-      // accessType: "offline",
-      // prompt: "select_account consent",
+      mapProfileToUser:(profile)=>{
+        return{
+          firstName: profile.given_name,
+          lastName: profile.family_name,
+          email: profile.email
+        }
+      }
     },
   },
 });

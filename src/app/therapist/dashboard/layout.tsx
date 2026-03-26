@@ -2,10 +2,8 @@ import { DashboardNavbar } from "@/components/dashboard/DashboardNavbar";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
-import { getNextOnboardingPathForUser } from "@/modules/auth/services/auth.service";
-import { toSignupRole } from "@/modules/auth/types";
 
-export default async function DashboardLayout({
+export default async function TherapistDashboardLayout({
     children,
 }: {
     children: React.ReactNode;
@@ -18,17 +16,12 @@ export default async function DashboardLayout({
         redirect("/auth/login");
     }
 
-    const role = toSignupRole(session.user.role);
-
-    if (role) {
-        const nextOnboardingPath = await getNextOnboardingPathForUser(session.user.id, role);
-        if (nextOnboardingPath) {
-            redirect(nextOnboardingPath);
-        }
+    if (session.user.role !== "THERAPIST") {
+        redirect("/dashboard");
     }
 
     return (
-        <div className="min-h-screen bg-soft-bg">
+        <div className="min-h-screen bg-[#FAFCFB]">
             <DashboardNavbar />
             <main className="container mx-auto px-6 py-8">
                 {children}

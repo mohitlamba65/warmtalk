@@ -25,11 +25,11 @@ export function DashboardNavbar() {
     };
 
     return (
-        <nav className="w-full bg-white border-b border-gray-100 py-4 px-6">
+        <nav className="w-full bg-white border-b border-gray-100 py-5 px-6 h-20 flex items-center">
             <div className="container mx-auto flex items-center justify-between">
                 {/* Logo */}
                 <Link href="/" className="flex items-center gap-2">
-                    <div className="relative w-32 h-10">
+                    <div className="relative w-52 h-12">
                         <Image
                             src="/logo.svg"
                             alt="WarmTalk"

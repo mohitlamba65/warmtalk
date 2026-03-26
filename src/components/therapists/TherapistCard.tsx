@@ -33,9 +33,11 @@ export async function TherapistCard({
         redirect("/auth/login");
     }
     return (
-        <Card className="overflow-hidden border-none shadow-sm hover:shadow-md transition-all bg-white rounded-3xl p-6 flex flex-col h-full">
+        <Card className="overflow-hidden border border-white/60 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] hover:-translate-y-1 transition-all duration-300 bg-white/80 backdrop-blur-md rounded-[2rem] p-6 flex flex-col h-full relative group">
+            {/* Decorative Element */}
+            <div className="absolute top-0 right-0 w-32 h-32 bg-brand-green/5 rounded-full blur-2xl -mr-16 -mt-16 pointer-events-none transition-transform group-hover:scale-110"></div>
             {/* Header */}
-            <div className="flex gap-4 items-start mb-4">
+            <div className="flex gap-4 items-start mb-4 relative z-10">
                 <div className="relative">
                     <Avatar className="h-16 w-16 border-2 border-white shadow-sm">
                         <AvatarImage src={imageUrl} alt={name} />

@@ -133,7 +133,8 @@ export default function MatchPage() {
     const [isAnimating, setIsAnimating] = useState(false);
     const [direction, setDirection] = useState<"forward" | "backward">("forward");
 
-    const step = STEPS[currentStep];
+    const safeStepIndex = Math.min(Math.max(currentStep, 0), STEPS.length - 1);
+    const step = STEPS[safeStepIndex];
     const progress = ((currentStep + 1) / STEPS.length) * 100;
     const isLastStep = currentStep === STEPS.length - 1;
     const canProceed = answers[currentStep] !== undefined;
@@ -143,31 +144,32 @@ export default function MatchPage() {
     }
 
     function goNext() {
-        if (!canProceed) return;
+        if (isAnimating || !canProceed) return;
         if (isLastStep) {
-            // Navigate to results with query params
+            // Navigate to register with callback to results page
             const params = new URLSearchParams({
                 concern: answers[0] || "",
                 severity: answers[1] || "",
                 style: answers[2] || "",
             });
-            router.push(`/therapists?${params.toString()}`);
+            const callbackUrl = encodeURIComponent(`/therapists?${params.toString()}`);
+            router.push(`/auth/register?callbackUrl=${callbackUrl}`);
             return;
         }
         setDirection("forward");
         setIsAnimating(true);
         setTimeout(() => {
-            setCurrentStep((prev) => prev + 1);
+            setCurrentStep((prev) => Math.min(prev + 1, STEPS.length - 1));
             setIsAnimating(false);
         }, 300);
     }
 
     function goBack() {
-        if (currentStep === 0) return;
+        if (isAnimating || currentStep === 0) return;
         setDirection("backward");
         setIsAnimating(true);
         setTimeout(() => {
-            setCurrentStep((prev) => prev - 1);
+            setCurrentStep((prev) => Math.max(prev - 1, 0));
             setIsAnimating(false);
         }, 300);
     }
@@ -186,22 +188,23 @@ export default function MatchPage() {
                 </div>
                 <div className="w-full h-2 bg-brand-green/10 rounded-full overflow-hidden">
                     <div
-                        className="h-full bg-gradient-to-r from-brand-orange to-orange-400 rounded-full transition-all duration-500 ease-out"
+                        className="h-full bg-linear-to-r from-brand-orange to-orange-400 rounded-full transition-all duration-500 ease-out"
                         style={{ width: `${progress}%` }}
                     />
                 </div>
             </div>
 
-            {/* Card */}
             <div className="w-full max-w-xl">
                 <div
-                    className={`bg-white rounded-3xl p-6 sm:p-10 shadow-lg shadow-brand-green/5 transition-all duration-300 ${isAnimating
+                    className={`bg-white/90 backdrop-blur-md border border-white/60 rounded-[2rem] p-6 sm:p-10 shadow-[0_8px_30px_rgb(0,0,0,0.06)] transition-all duration-300 relative overflow-hidden ${isAnimating
                             ? direction === "forward"
                                 ? "opacity-0 translate-x-8"
                                 : "opacity-0 -translate-x-8"
                             : "opacity-100 translate-x-0"
                         }`}
                 >
+                    <div className="absolute top-0 right-0 w-48 h-48 bg-brand-green/5 rounded-full blur-3xl -mr-24 -mt-24 pointer-events-none"></div>
+                    <div className="relative z-10">
                     {/* Title */}
                     <div className="text-center mb-8">
                         <h1 className="text-2xl sm:text-3xl font-serif font-bold text-brand-green mb-3 leading-tight">
@@ -220,15 +223,15 @@ export default function MatchPage() {
                                 <button
                                     key={option.id}
                                     onClick={() => selectOption(option.value)}
-                                    className={`w-full text-left p-4 sm:p-5 rounded-2xl border-2 transition-all duration-200 cursor-pointer group ${isSelected
-                                            ? "border-brand-orange bg-orange-50/80 shadow-md shadow-brand-orange/10"
-                                            : "border-gray-100 bg-white hover:border-brand-green/20 hover:bg-brand-green/[0.02]"
+                                    className={`w-full text-left p-4 sm:p-5 rounded-xl border-2 transition-all duration-300 cursor-pointer group ${isSelected
+                                            ? "border-brand-orange bg-orange-50/80 shadow-[0_4px_20px_rgb(234,88,12,0.15)] -translate-y-1"
+                                            : "border-gray-100 bg-white hover:border-brand-green/30 hover:bg-brand-green/2 hover:-translate-y-0.5 hover:shadow-sm"
                                         }`}
                                 >
                                     <div className="flex items-start gap-4">
                                         {/* Icon */}
                                         <div
-                                            className={`flex-shrink-0 w-11 h-11 rounded-xl flex items-center justify-center transition-colors duration-200 ${isSelected
+                                            className={`shrink-0 w-11 h-11 rounded-xl flex items-center justify-center transition-colors duration-200 ${isSelected
                                                     ? "bg-brand-orange text-white"
                                                     : "bg-brand-green/5 text-brand-green/60 group-hover:bg-brand-green/10"
                                                 }`}
@@ -249,7 +252,7 @@ export default function MatchPage() {
                                         </div>
                                         {/* Radio indicator */}
                                         <div
-                                            className={`flex-shrink-0 w-5 h-5 rounded-full border-2 mt-0.5 flex items-center justify-center transition-all duration-200 ${isSelected
+                                            className={`shrink-0 w-5 h-5 rounded-full border-2 mt-0.5 flex items-center justify-center transition-all duration-200 ${isSelected
                                                     ? "border-brand-orange bg-brand-orange"
                                                     : "border-gray-200 group-hover:border-brand-green/30"
                                                 }`}
@@ -262,6 +265,7 @@ export default function MatchPage() {
                                 </button>
                             );
                         })}
+                    </div>
                     </div>
                 </div>
 
@@ -278,8 +282,8 @@ export default function MatchPage() {
 
                     <Button
                         onClick={goNext}
-                        disabled={!canProceed}
-                        className={`gap-2 rounded-full h-12 px-8 font-bold text-white shadow-lg transition-all duration-300 cursor-pointer ${canProceed
+                        disabled={!canProceed || isAnimating}
+                        className={`gap-2 rounded-full h-12 px-8 font-bold text-white shadow-lg transition-all duration-300 cursor-pointer ${canProceed && !isAnimating
                                 ? "bg-brand-orange hover:bg-orange-600 shadow-brand-orange/25 hover:shadow-brand-orange/40 hover:scale-[1.02]"
                                 : "bg-gray-200 text-gray-400 shadow-none cursor-not-allowed"
                             }`}

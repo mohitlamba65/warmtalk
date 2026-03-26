@@ -257,11 +257,11 @@ export default async function TherapistsPage({
                             <div key={therapist.id} className="relative group">
                                 {/* Match Score Badge */}
                                 {hasFilters && (
-                                    <div className="absolute -top-3 -right-3 z-10">
+                                    <div className="absolute -top-4 -right-4 z-20">
                                         <div
-                                            className={`w-14 h-14 rounded-2xl flex flex-col items-center justify-center text-white font-bold shadow-lg ${index === 0
-                                                    ? "bg-gradient-to-br from-brand-orange to-orange-500 shadow-brand-orange/30"
-                                                    : "bg-gradient-to-br from-brand-green to-emerald-700 shadow-brand-green/20"
+                                            className={`w-16 h-16 rounded-[1.25rem] flex flex-col items-center justify-center text-white font-bold shadow-xl border-2 border-white transform hover:scale-105 transition-transform ${index === 0
+                                                    ? "bg-gradient-to-br from-brand-orange to-orange-500 shadow-brand-orange/40"
+                                                    : "bg-gradient-to-br from-brand-green to-emerald-700 shadow-brand-green/30"
                                                 }`}
                                         >
                                             <span className="text-sm leading-none">{matchPercent}%</span>
@@ -277,8 +277,9 @@ export default async function TherapistsPage({
 
                 {/* CTA if no filters */}
                 {!hasFilters && (
-                    <div className="text-center mt-16 bg-white rounded-3xl p-8 sm:p-12 shadow-sm max-w-lg mx-auto">
-                        <div className="w-16 h-16 rounded-2xl bg-brand-orange/10 flex items-center justify-center mx-auto mb-5">
+                    <div className="text-center mt-16 bg-white/80 backdrop-blur-md border border-white/60 rounded-[2rem] p-8 sm:p-12 shadow-[0_8px_30px_rgb(0,0,0,0.06)] max-w-lg mx-auto relative overflow-hidden group">
+                        <div className="absolute top-0 left-0 w-40 h-40 bg-brand-orange/5 rounded-full blur-3xl -ml-20 -mt-20 pointer-events-none transition-transform group-hover:scale-110"></div>
+                        <div className="relative z-10 w-16 h-16 rounded-2xl bg-brand-orange/10 flex items-center justify-center mx-auto mb-5 shadow-inner">
                             <Sparkles className="w-8 h-8 text-brand-orange" />
                         </div>
                         <h2 className="text-2xl font-serif font-bold text-brand-green mb-3">

@@ -1,20 +1,22 @@
 import Link from "next/link";
 import {
     Video,
-    Calendar as CalendarIcon,
     Clock,
-    MoreHorizontal,
     Book,
     Wind,
     Target,
     Headphones,
-    ChevronLeft,
-    ChevronRight
+    MessageCircle,
+    FileText,
+    Calendar as CalendarIcon,
+    ArrowRight
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { Calendar } from "@/components/ui/calendar";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
@@ -23,16 +25,19 @@ export default async function DashboardPage() {
     const session = await auth.api.getSession({
         headers: await headers()
     });
-    console.log(" session", session);
+    
     if(!session) {
         redirect("/auth/login");
     }
+    
     return (
-        <div className="space-y-8">
+        <div className="space-y-8 animate-in fade-in duration-500">
             {/* Header */}
             <div>
-                <h1 className="text-3xl font-serif font-bold text-brand-green">Welcome, {session.user?.name}!</h1>
-                <p className="text-muted-foreground mt-1">Your mental wellness journey is progressing well. Here is your overview for today.</p>
+                <h1 className="text-3xl md:text-4xl font-serif font-bold text-brand-green tracking-tight">
+                    Welcome back, {session.user?.name}!
+                </h1>
+                <p className="text-brand-green/70 mt-2 text-lg">Your mental wellness journey is progressing well. Here is your overview for today.</p>
             </div>
 
             <div className="grid lg:grid-cols-3 gap-8">
@@ -40,88 +45,132 @@ export default async function DashboardPage() {
                 <div className="lg:col-span-2 space-y-8">
 
                     {/* Upcoming Session Card */}
-                    <Card className="border-none shadow-sm bg-gradient-to-br from-[#FFF8F0] to-white p-6 md:p-8 rounded-[2rem] relative overflow-hidden">
+                    <Card className="border-none shadow-[0_8px_30px_rgb(0,0,0,0.04)] bg-gradient-to-br from-[#FFF8F0] to-white rounded-[2rem] relative overflow-hidden transition-all duration-300 hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)]">
                         {/* Decorator */}
-                        <div className="absolute top-0 right-0 w-64 h-64 bg-orange-100/50 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none"></div>
+                        <div className="absolute top-0 right-0 w-64 h-64 bg-brand-orange/10 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none"></div>
 
-                        <div className="relative z-10">
-                            <div className="flex justify-between items-start mb-6">
+                        <CardContent className="p-6 md:p-8 relative z-10">
+                            <div className="flex flex-col md:flex-row justify-between items-start mb-8 gap-4">
                                 <div>
-                                    <Badge variant="secondary" className="bg-[#E6F4F1] text-brand-green hover:bg-[#E6F4F1] mb-3 font-medium">
-                                        Upcoming Session
+                                    <Badge variant="secondary" className="bg-brand-green/10 text-brand-green hover:bg-brand-green/20 mb-4 px-3 py-1 font-bold tracking-wide uppercase text-xs">
+                                        Next Session
                                     </Badge>
-                                    <h2 className="text-2xl font-bold text-brand-green mb-1">Session with Dr. Sarah Chen</h2>
-                                    <p className="text-muted-foreground">Cognitive Behavioral Therapy • 50 min</p>
+                                    <h2 className="text-2xl font-serif font-bold text-brand-green mb-2">Session with Dr. Sarah Chen</h2>
+                                    <p className="text-brand-green/70 flex items-center gap-2">
+                                        <Clock className="w-4 h-4" /> 50 min • Cognitive Behavioral Therapy
+                                    </p>
                                 </div>
-                                <div className="text-right hidden sm:block">
-                                    <div className="text-4xl font-bold text-brand-orange">14:30</div>
-                                    <div className="text-sm text-muted-foreground">Today, October 24th</div>
+                                <div className="text-left md:text-right bg-white/60 md:bg-transparent p-4 md:p-0 rounded-2xl w-full md:w-auto">
+                                    <div className="text-4xl font-bold text-brand-orange mb-1">14:30</div>
+                                    <div className="text-sm font-medium text-brand-green/70">Today, October 24th</div>
                                 </div>
                             </div>
 
-                            <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 flex items-center justify-between mb-8 border border-gray-100">
-                                <div className="flex items-center gap-3 text-gray-600">
-                                    <Video className="w-5 h-5 text-gray-400" />
-                                    <span className="font-medium">Secure Video Link</span>
+                            <div className="bg-white/80 backdrop-blur-md rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 border border-white shadow-sm">
+                                <div className="flex items-center gap-3 text-brand-green">
+                                    <div className="bg-brand-green/10 p-2 rounded-full">
+                                        <Video className="w-5 h-5 text-brand-green" />
+                                    </div>
+                                    <span className="font-bold">Secure Video Link</span>
                                 </div>
-                                <span className="text-xs font-mono text-gray-400">ID: 884-291-002</span>
+                                <span className="text-xs font-mono font-bold text-brand-green/50 bg-gray-100 px-3 py-1.5 rounded-lg">ID: 884-291-002</span>
                             </div>
 
                             <div className="flex flex-col sm:flex-row gap-4">
-                                <Button className="flex-1 bg-brand-orange hover:bg-orange-600 text-white font-bold h-12 rounded-xl shadow-md text-base">
+                                <Button className="flex-1 bg-brand-orange hover:bg-orange-600 text-white font-bold h-14 rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all text-base">
                                     <Video className="w-5 h-5 mr-2" /> Join Video Call
                                 </Button>
-                                <Button variant="outline" className="flex-1 h-12 rounded-xl font-bold text-brand-green border-gray-200 hover:bg-gray-50 hover:text-brand-green">
+                                <Button variant="outline" className="flex-1 h-14 rounded-xl font-bold text-brand-green border-brand-green/20 hover:bg-brand-green hover:text-white transition-all text-base">
                                     <CalendarIcon className="w-5 h-5 mr-2" /> Reschedule
                                 </Button>
                             </div>
-                        </div>
+                        </CardContent>
                     </Card>
 
                     {/* Your Care Team */}
-                    <Card className="border-none shadow-sm bg-white p-6 md:p-8 rounded-[2rem]">
-                        <div className="flex justify-between items-center mb-6">
-                            <div className="flex items-center gap-2">
-                                <div className="p-2 bg-orange-100 rounded-full">
-                                    <Avatar className="h-5 w-5 text-brand-orange">
-                                        <AvatarFallback className="bg-transparent text-brand-orange">
-                                            <Video className="w-4 h-4" />
-                                        </AvatarFallback>
-                                    </Avatar>
+                    <Card className="border-none shadow-[0_8px_30px_rgb(0,0,0,0.04)] bg-white rounded-[2rem] overflow-hidden">
+                        <CardHeader className="bg-brand-green/5 pb-6">
+                            <div className="flex justify-between items-center">
+                                <div className="flex items-center gap-3">
+                                    <div className="p-2.5 bg-brand-orange/10 rounded-xl">
+                                        <Headphones className="w-5 h-5 text-brand-orange" />
+                                    </div>
+                                    <CardTitle className="text-xl font-bold text-brand-green">Your Care Team</CardTitle>
                                 </div>
-                                <h2 className="text-lg font-bold text-brand-green">Your Care Team</h2>
+                                <Button variant="ghost" className="text-brand-orange font-bold hover:bg-brand-orange/10 rounded-full h-8 px-3 text-sm">
+                                    Manage
+                                </Button>
                             </div>
-                            <Button variant="link" className="text-brand-orange font-bold text-sm">View Full Profile</Button>
-                        </div>
+                        </CardHeader>
+                        <CardContent className="p-6 md:p-8">
+                            <div className="flex flex-col md:flex-row gap-8 items-start">
+                                <Avatar className="w-32 h-32 md:w-40 md:h-40 border-4 border-brand-green/5 shadow-md shrink-0 rounded-2xl">
+                                    <AvatarImage src="https://i.pravatar.cc/150?u=dr_sarah" className="object-cover" />
+                                    <AvatarFallback className="bg-brand-green/5 text-brand-green font-bold text-xl rounded-2xl">DR</AvatarFallback>
+                                </Avatar>
 
-                        <div className="flex flex-col md:flex-row gap-6 items-start">
-                            <div className="relative w-full md:w-48 aspect-[4/3] rounded-2xl overflow-hidden shrink-0">
-                                {/* Placeholder Image */}
-                                <div className="w-full h-full bg-gray-200 flex items-center justify-center text-gray-400">
-                                    <span className="text-xs">Dr. Sarah Photo</span>
+                                <div className="space-y-4 flex-1">
+                                    <div>
+                                        <h3 className="text-2xl font-serif font-bold text-brand-green mb-1">Dr. Sarah Chen, PsyD</h3>
+                                        <p className="text-brand-green/70 font-medium">Clinical Psychologist • 8 years exp</p>
+                                    </div>
+                                    <p className="text-sm text-brand-green/80 leading-relaxed italic bg-gray-50 p-4 rounded-xl border-l-4 border-brand-orange">
+                                        "My goal is to help you find your center and build resilience through evidence-based cognitive therapy."
+                                    </p>
+                                    <div className="flex flex-wrap gap-2 pt-2">
+                                        <Badge variant="secondary" className="bg-brand-green/5 text-brand-green hover:bg-brand-green/10">Anxiety</Badge>
+                                        <Badge variant="secondary" className="bg-brand-green/5 text-brand-green hover:bg-brand-green/10">Burnout</Badge>
+                                        <Badge variant="secondary" className="bg-brand-green/5 text-brand-green hover:bg-brand-green/10">CBT</Badge>
+                                    </div>
+                                    <div className="pt-4 flex gap-3 text-sm font-bold">
+                                        <Button variant="outline" size="sm" className="rounded-lg border-brand-green/20 text-brand-green hover:bg-brand-green/5">
+                                            <MessageCircle className="w-4 h-4 mr-2" /> Message
+                                        </Button>
+                                        <Button variant="outline" size="sm" className="rounded-lg border-brand-green/20 text-brand-green hover:bg-brand-green/5">
+                                            <FileText className="w-4 h-4 mr-2" /> Notes
+                                        </Button>
+                                    </div>
                                 </div>
                             </div>
-
-                            <div className="space-y-4">
-                                <div>
-                                    <h3 className="text-xl font-serif font-bold text-brand-green">Dr. Sarah Chen, PsyD</h3>
-                                    <p className="text-sm text-muted-foreground">Clinical Psychologist • 8 years exp</p>
-                                </div>
-                                <p className="text-sm text-gray-600 leading-relaxed">
-                                    Specializes in anxiety and stress management through mindfulness-based cognitive therapy. "My goal is to help you find your center and build resilience."
-                                </p>
-                                <div className="flex gap-2">
-                                    <Badge variant="secondary" className="bg-gray-100 text-gray-600 hover:bg-gray-100">Anxiety</Badge>
-                                    <Badge variant="secondary" className="bg-gray-100 text-gray-600 hover:bg-gray-100">Burnout</Badge>
-                                    <Badge variant="secondary" className="bg-gray-100 text-gray-600 hover:bg-gray-100">CBT</Badge>
-                                </div>
-                                <div className="pt-2 flex gap-4 text-sm font-medium underline text-gray-400 decoration-gray-300 underline-offset-4">
-                                    <Link href="#" className="hover:text-brand-green transition-colors">Request Change</Link>
-                                    <Link href="#" className="hover:text-brand-green transition-colors">Send Message</Link>
-                                </div>
-                            </div>
-                        </div>
+                        </CardContent>
                     </Card>
+
+                    {/* Tabs for extra data */}
+                    <Tabs defaultValue="history" className="w-full">
+                        <TabsList className="bg-brand-green/5 p-1 rounded-xl w-full justify-start h-auto">
+                            <TabsTrigger value="history" className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-brand-green text-brand-green/60 font-bold py-2.5 px-6">Session History</TabsTrigger>
+                            <TabsTrigger value="goals" className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-brand-green text-brand-green/60 font-bold py-2.5 px-6">Treatment Goals</TabsTrigger>
+                        </TabsList>
+                        <TabsContent value="history" className="mt-6">
+                            <Card className="border-none shadow-sm rounded-2xl bg-white overflow-hidden">
+                                <div className="divide-y divide-gray-100">
+                                    {[1, 2, 3].map((i) => (
+                                        <div key={i} className="p-4 flex items-center justify-between hover:bg-gray-50 transition-colors cursor-pointer group">
+                                            <div className="flex items-center gap-4">
+                                                <div className="bg-brand-green/5 p-3 rounded-xl group-hover:bg-brand-green/10 transition-colors">
+                                                    <CalendarIcon className="w-5 h-5 text-brand-green" />
+                                                </div>
+                                                <div>
+                                                    <p className="font-bold text-brand-green">Therapy Session</p>
+                                                    <p className="text-xs text-brand-green/60">Oct {24 - (i*7)}, 2023</p>
+                                                </div>
+                                            </div>
+                                            <Badge variant="outline" className="text-brand-green/60 border-brand-green/20">Completed</Badge>
+                                        </div>
+                                    ))}
+                                </div>
+                                <Button variant="ghost" className="w-full rounded-none py-6 text-brand-orange font-bold hover:bg-brand-orange/5 hover:text-orange-600">
+                                    View All History <ArrowRight className="w-4 h-4 ml-2" />
+                                </Button>
+                            </Card>
+                        </TabsContent>
+                        <TabsContent value="goals" className="mt-6 text-center py-12 bg-white rounded-2xl border-none shadow-sm">
+                            <Target className="w-12 h-12 text-brand-orange/50 mx-auto mb-4" />
+                            <h3 className="text-lg font-bold text-brand-green">No goals set yet</h3>
+                            <p className="text-sm text-brand-green/60 mt-1 mb-4">Work with your therapist to establish treatment goals.</p>
+                            <Button variant="outline" className="rounded-full border-brand-green/20 text-brand-green">Set New Goal</Button>
+                        </TabsContent>
+                    </Tabs>
 
                 </div>
 
@@ -129,75 +178,70 @@ export default async function DashboardPage() {
                 <div className="space-y-8">
 
                     {/* Calendar Widget */}
-                    <Card className="border-none shadow-sm bg-white p-6 rounded-[2rem] min-h-[400px]">
-                        <div className="flex items-center justify-between mb-6">
-                            <h3 className="font-bold text-brand-green">October 2023</h3>
-                            <div className="flex gap-2">
-                                <Button variant="ghost" size="icon" className="h-8 w-8 text-gray-400"><ChevronLeft className="w-4 h-4" /></Button>
-                                <Button variant="ghost" size="icon" className="h-8 w-8 text-gray-400"><ChevronRight className="w-4 h-4" /></Button>
-                            </div>
-                        </div>
-                        {/* Simple HTML Calendar Mockup */}
-                        <div className="grid grid-cols-7 text-center text-xs text-gray-400 mb-4">
-                            <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
-                        </div>
-                        <div className="grid grid-cols-7 text-center text-sm gap-y-4 mb-8 text-gray-700 font-medium">
-                            <span></span><span></span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span>
-                            <span>6</span><span>7</span><span>8</span><span>9</span>
-                            <span className="bg-brand-orange text-white w-8 h-8 rounded-full flex items-center justify-center mx-auto shadow-md">10</span>
-                            <span>11</span><span>12</span>
-                            <span>13</span><span>14</span><span>15</span><span>16</span><span>17</span><span>18</span><span>19</span>
-                            <span>20</span><span>21</span><span>22</span><span>23</span>
-                            <span className="bg-brand-orange/10 text-brand-orange w-8 h-8 rounded-full flex items-center justify-center mx-auto font-bold">24</span>
-                            <span>25</span>
-                        </div>
-
-                        <div className="space-y-4">
-                            <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Upcoming Appointments</h4>
-                            <div className="bg-[#FFF8F0] p-4 rounded-xl flex items-center gap-4 relative overflow-hidden border-l-4 border-brand-orange">
-                                <div className="text-center shrink-0">
-                                    <span className="block text-xs font-bold text-gray-400 uppercase">OCT</span>
-                                    <span className="block text-xl font-bold text-brand-green">24</span>
-                                </div>
-                                <div>
-                                    <p className="font-bold text-gray-900 text-sm">Therapy Session</p>
-                                    <p className="text-xs text-gray-500">14:30 - 15:20</p>
+                    <Card className="border-none shadow-[0_8px_30px_rgb(0,0,0,0.04)] bg-white rounded-[2rem] overflow-hidden">
+                        <CardHeader className="pb-0 pt-6">
+                            <CardTitle className="font-bold text-brand-green text-lg px-2">Schedule</CardTitle>
+                        </CardHeader>
+                        <CardContent className="p-4">
+                            <Calendar
+                                mode="single"
+                                selected={new Date()}
+                                className="rounded-xl w-full mx-auto"
+                                classNames={{
+                                    day_selected: "bg-brand-orange text-white hover:bg-brand-orange hover:text-white focus:bg-brand-orange focus:text-white",
+                                    day_today: "bg-brand-orange/10 text-brand-orange",
+                                }}
+                            />
+                            
+                            <div className="mt-6 space-y-3 px-2">
+                                <h4 className="text-xs font-bold text-brand-green/50 uppercase tracking-wider mb-2">Upcoming</h4>
+                                <div className="bg-[#FFF8F0] p-4 rounded-xl flex items-center gap-4 border-l-4 border-brand-orange shadow-sm hover:shadow-md transition-shadow cursor-pointer">
+                                    <div className="text-center shrink-0">
+                                        <span className="block text-[10px] font-bold text-brand-orange uppercase">OCT</span>
+                                        <span className="block text-xl font-bold text-brand-orange">24</span>
+                                    </div>
+                                    <div>
+                                        <p className="font-bold text-brand-green text-sm">Therapy Session</p>
+                                        <p className="text-xs text-brand-green/60 font-medium mt-0.5">14:30 - 15:20</p>
+                                    </div>
                                 </div>
                             </div>
-                            <div className="bg-gray-50 p-4 rounded-xl flex items-center gap-4 border-l-4 border-gray-200 opacity-60">
-                                <div className="text-center shrink-0">
-                                    <span className="block text-xs font-bold text-gray-400 uppercase">OCT</span>
-                                    <span className="block text-xl font-bold text-gray-600">31</span>
-                                </div>
-                                <div>
-                                    <p className="font-bold text-gray-900 text-sm">Therapy Session</p>
-                                    <p className="text-xs text-gray-500">14:30 - 15:20</p>
-                                </div>
-                            </div>
-                        </div>
+                        </CardContent>
                     </Card>
 
-                    {/* Quick Tools */}
-                    <Card className="border-none shadow-sm bg-white p-6 rounded-[2rem]">
-                        <h3 className="font-bold text-brand-green mb-4">Quick Tools</h3>
-                        <div className="grid grid-cols-2 gap-4">
-                            <div className="bg-white p-4 rounded-2xl flex flex-col items-center justify-center gap-2 hover:shadow-sm transition-shadow cursor-pointer py-6">
-                                <Book className="w-6 h-6 text-brand-orange" />
-                                <span className="text-xs font-bold text-gray-700">Journal</span>
+                    {/* Quick Tools Grid */}
+                    <Card className="border-none shadow-[0_8px_30px_rgb(0,0,0,0.04)] bg-white rounded-[2rem]">
+                        <CardHeader className="pb-4">
+                            <CardTitle className="font-bold text-brand-green text-lg">Self-Care Tools</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="bg-brand-green/5 p-6 rounded-2xl flex flex-col items-center justify-center gap-3 hover:bg-brand-green/10 hover:-translate-y-1 transition-all cursor-pointer group">
+                                    <div className="bg-white p-3 rounded-full shadow-sm group-hover:scale-110 transition-transform">
+                                        <Book className="w-6 h-6 text-brand-green" />
+                                    </div>
+                                    <span className="text-sm font-bold text-brand-green">Journal</span>
+                                </div>
+                                <div className="bg-brand-orange/5 p-6 rounded-2xl flex flex-col items-center justify-center gap-3 hover:bg-brand-orange/10 hover:-translate-y-1 transition-all cursor-pointer group">
+                                    <div className="bg-white p-3 rounded-full shadow-sm group-hover:scale-110 transition-transform">
+                                        <Wind className="w-6 h-6 text-brand-orange" />
+                                    </div>
+                                    <span className="text-sm font-bold text-brand-orange">Breathing</span>
+                                </div>
+                                <div className="bg-blue-50 p-6 rounded-2xl flex flex-col items-center justify-center gap-3 hover:bg-blue-100 hover:-translate-y-1 transition-all cursor-pointer group">
+                                    <div className="bg-white p-3 rounded-full shadow-sm group-hover:scale-110 transition-transform">
+                                        <Target className="w-6 h-6 text-blue-500" />
+                                    </div>
+                                    <span className="text-sm font-bold text-blue-700">Goals</span>
+                                </div>
+                                <div className="bg-purple-50 p-6 rounded-2xl flex flex-col items-center justify-center gap-3 hover:bg-purple-100 hover:-translate-y-1 transition-all cursor-pointer group">
+                                    <div className="bg-white p-3 rounded-full shadow-sm group-hover:scale-110 transition-transform">
+                                        <Headphones className="w-6 h-6 text-purple-500" />
+                                    </div>
+                                    <span className="text-sm font-bold text-purple-700">Audio</span>
+                                </div>
                             </div>
-                            <div className="bg-white p-4 rounded-2xl flex flex-col items-center justify-center gap-2 hover:shadow-sm transition-shadow cursor-pointer py-6">
-                                <Wind className="w-6 h-6 text-brand-orange" />
-                                <span className="text-xs font-bold text-gray-700">Breathing</span>
-                            </div>
-                            <div className="bg-white p-4 rounded-2xl flex flex-col items-center justify-center gap-2 hover:shadow-sm transition-shadow cursor-pointer py-6">
-                                <Target className="w-6 h-6 text-brand-orange" />
-                                <span className="text-xs font-bold text-gray-700">Goals</span>
-                            </div>
-                            <div className="bg-white p-4 rounded-2xl flex flex-col items-center justify-center gap-2 hover:shadow-sm transition-shadow cursor-pointer py-6">
-                                <Headphones className="w-6 h-6 text-brand-orange" />
-                                <span className="text-xs font-bold text-gray-700">Support</span>
-                            </div>
-                        </div>
+                        </CardContent>
                     </Card>
 
                 </div>

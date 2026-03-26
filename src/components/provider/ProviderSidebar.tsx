@@ -29,7 +29,7 @@ export function ProviderSidebar() {
             {/* Logo */}
             <div className="p-6">
                 <Link href="/" className="flex items-center gap-2">
-                    <div className="relative w-40 h-10">
+                    <div className="relative w-52 h-12">
                         <Image
                             src="/logo.svg"
                             alt="WarmTalk"

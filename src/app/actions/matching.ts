@@ -1,4 +1,3 @@
-"use server";
 
 import { PrismaClient, DisorderType } from "@prisma/client";
 
