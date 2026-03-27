@@ -1,5 +1,5 @@
 import { prisma } from "@/infrastructure/database/prisma";
-import { DisorderType, SubscriptionTier } from "@prisma/client";
+import { DisorderType, SubscriptionTier } from "@/generated/prisma/client";
 
 export async function matchTherapist(userAnswers: Record<string, number>) {
 

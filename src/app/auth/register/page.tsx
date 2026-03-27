@@ -10,7 +10,7 @@ import { useState, Suspense } from "react";
 import { authClient } from "@/lib/auth-client";
 import { useRouter, useSearchParams } from "next/navigation";
 import { saveClientProfile, saveTherapistProfile } from "@/app/actions/profiles";
-import type { DisorderType } from "@prisma/client";
+import type { DisorderType } from "@/generated/prisma/client";
 
 // --- Form Components & Definitions ---
 

@@ -1,7 +1,10 @@
 
-import { PrismaClient, DisorderType } from "@prisma/client";
+import { PrismaClient, DisorderType } from "@/generated/prisma/client";
+import { PrismaPg } from "@prisma/adapter-pg";
 
-const prisma = new PrismaClient();
+const connectionString = process.env.DATABASE_URL || "";
+const adapter = new PrismaPg({ connectionString });
+const prisma = new PrismaClient({ adapter });
 
 export async function verifyInsurance(providerId: string, insuranceProvider: string, memberId: string) {
     // Simulate external API call

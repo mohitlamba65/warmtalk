@@ -3,7 +3,7 @@
 import { auth } from "@/lib/auth";
 import { prisma } from "@/infrastructure/database/prisma";
 import { headers } from "next/headers";
-import { DisorderType } from "@prisma/client";
+import { DisorderType } from "@/generated/prisma/client";
 
 export async function saveClientProfile(data: { primaryDisorder: DisorderType; severityScore: number; stylePreference: string }) {
     const session = await auth.api.getSession({ headers: await headers() });
