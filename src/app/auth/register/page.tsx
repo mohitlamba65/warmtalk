@@ -230,7 +230,7 @@ function RegisterForm() {
                                                 onChange={(e) => setPassword(e.target.value)}
                                             />
                                         </div>
-                                        <p className="text-xs text-gray-400 ml-2">Your password must be at least 6 characters long</p>
+                                        <p className="text-xs text-gray-400 ml-2">Your password must be at least 8 characters long</p>
                                     </div>
                                 </div>
 

@@ -20,6 +20,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { getDashboardDataAction } from "@/app/actions/dashboard.actions";
 
 export default async function DashboardPage() {
     const session = await auth.api.getSession({
@@ -29,6 +30,9 @@ export default async function DashboardPage() {
     if(!session) {
         redirect("/auth/login");
     }
+
+    const stats = await getDashboardDataAction();
+    const nextSession = stats.upcomingSessions[0];
     
     return (
         <div className="space-y-8 animate-in fade-in duration-500">
@@ -45,7 +49,8 @@ export default async function DashboardPage() {
                 <div className="lg:col-span-2 space-y-8">
 
                     {/* Upcoming Session Card */}
-                    <Card className="border-none shadow-[0_8px_30px_rgb(0,0,0,0.04)] bg-gradient-to-br from-[#FFF8F0] to-white rounded-[2rem] relative overflow-hidden transition-all duration-300 hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)]">
+                    {nextSession ? (
+                        <Card className="border-none shadow-[0_8px_30px_rgb(0,0,0,0.04)] bg-gradient-to-br from-[#FFF8F0] to-white rounded-[2rem] relative overflow-hidden transition-all duration-300 hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)]">
                         {/* Decorator */}
                         <div className="absolute top-0 right-0 w-64 h-64 bg-brand-orange/10 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none"></div>
 
@@ -55,14 +60,18 @@ export default async function DashboardPage() {
                                     <Badge variant="secondary" className="bg-brand-green/10 text-brand-green hover:bg-brand-green/20 mb-4 px-3 py-1 font-bold tracking-wide uppercase text-xs">
                                         Next Session
                                     </Badge>
-                                    <h2 className="text-2xl font-serif font-bold text-brand-green mb-2">Session with Dr. Sarah Chen</h2>
+                                    <h2 className="text-2xl font-serif font-bold text-brand-green mb-2">Session with {nextSession.therapistName}</h2>
                                     <p className="text-brand-green/70 flex items-center gap-2">
-                                        <Clock className="w-4 h-4" /> 50 min • Cognitive Behavioral Therapy
+                                        <Clock className="w-4 h-4" /> 50 min • Therapy Session
                                     </p>
                                 </div>
                                 <div className="text-left md:text-right bg-white/60 md:bg-transparent p-4 md:p-0 rounded-2xl w-full md:w-auto">
-                                    <div className="text-4xl font-bold text-brand-orange mb-1">14:30</div>
-                                    <div className="text-sm font-medium text-brand-green/70">Today, October 24th</div>
+                                    <div className="text-4xl font-bold text-brand-orange mb-1">
+                                        {new Intl.DateTimeFormat('en-US', { hour: 'numeric', minute: '2-digit' }).format(new Date(nextSession.startTime))}
+                                    </div>
+                                    <div className="text-sm font-medium text-brand-green/70">
+                                        {new Intl.DateTimeFormat('en-US', { weekday: 'long', month: 'long', day: 'numeric' }).format(new Date(nextSession.startTime))}
+                                    </div>
                                 </div>
                             </div>
 
@@ -86,6 +95,7 @@ export default async function DashboardPage() {
                             </div>
                         </CardContent>
                     </Card>
+                    ) : null}
 
                     {/* Your Care Team */}
                     <Card className="border-none shadow-[0_8px_30px_rgb(0,0,0,0.04)] bg-white rounded-[2rem] overflow-hidden">
@@ -105,26 +115,27 @@ export default async function DashboardPage() {
                         <CardContent className="p-6 md:p-8">
                             <div className="flex flex-col md:flex-row gap-8 items-start">
                                 <Avatar className="w-32 h-32 md:w-40 md:h-40 border-4 border-brand-green/5 shadow-md shrink-0 rounded-2xl">
-                                    <AvatarImage src="https://i.pravatar.cc/150?u=dr_sarah" className="object-cover" />
-                                    <AvatarFallback className="bg-brand-green/5 text-brand-green font-bold text-xl rounded-2xl">DR</AvatarFallback>
+                                    {stats.assignedTherapist?.avatar && <AvatarImage src={stats.assignedTherapist.avatar} className="object-cover" />}
+                                    <AvatarFallback className="bg-brand-green/5 text-brand-green font-bold text-2xl rounded-2xl">{stats.assignedTherapist ? stats.assignedTherapist.name.charAt(0) : "T"}</AvatarFallback>
                                 </Avatar>
 
                                 <div className="space-y-4 flex-1">
                                     <div>
-                                        <h3 className="text-2xl font-serif font-bold text-brand-green mb-1">Dr. Sarah Chen, PsyD</h3>
-                                        <p className="text-brand-green/70 font-medium">Clinical Psychologist • 8 years exp</p>
+                                        <h3 className="text-2xl font-serif font-bold text-brand-green mb-1">{stats.assignedTherapist?.name || "Pending Assignment"}</h3>
+                                        {stats.assignedTherapist && <p className="text-brand-green/70 font-medium">Licensed Therapist • {stats.assignedTherapist.yearsExperience || 0} years exp</p>}
                                     </div>
                                     <p className="text-sm text-brand-green/80 leading-relaxed italic bg-gray-50 p-4 rounded-xl border-l-4 border-brand-orange">
-                                        "My goal is to help you find your center and build resilience through evidence-based cognitive therapy."
+                                        "{stats.assignedTherapist?.bio || "We are currently pairing you with the perfect professional."}"
                                     </p>
                                     <div className="flex flex-wrap gap-2 pt-2">
-                                        <Badge variant="secondary" className="bg-brand-green/5 text-brand-green hover:bg-brand-green/10">Anxiety</Badge>
-                                        <Badge variant="secondary" className="bg-brand-green/5 text-brand-green hover:bg-brand-green/10">Burnout</Badge>
-                                        <Badge variant="secondary" className="bg-brand-green/5 text-brand-green hover:bg-brand-green/10">CBT</Badge>
+                                        {stats.assignedTherapist?.specialties.map(spec => (
+                                            <Badge key={spec} variant="secondary" className="bg-brand-green/5 text-brand-green hover:bg-brand-green/10">{spec.replace("_", " ")}</Badge>
+                                        ))}
                                     </div>
                                     <div className="pt-4 flex gap-3 text-sm font-bold">
-                                        <Button variant="outline" size="sm" className="rounded-lg border-brand-green/20 text-brand-green hover:bg-brand-green/5">
+                                        <Button variant="outline" size="sm" className="rounded-lg border-brand-green/20 text-brand-green hover:bg-brand-green/5 relative">
                                             <MessageCircle className="w-4 h-4 mr-2" /> Message
+                                            {stats.unreadCount > 0 && <span className="absolute -top-1 -right-1 bg-brand-orange text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center">{stats.unreadCount}</span>}
                                         </Button>
                                         <Button variant="outline" size="sm" className="rounded-lg border-brand-green/20 text-brand-green hover:bg-brand-green/5">
                                             <FileText className="w-4 h-4 mr-2" /> Notes
@@ -195,16 +206,26 @@ export default async function DashboardPage() {
                             
                             <div className="mt-6 space-y-3 px-2">
                                 <h4 className="text-xs font-bold text-brand-green/50 uppercase tracking-wider mb-2">Upcoming</h4>
-                                <div className="bg-[#FFF8F0] p-4 rounded-xl flex items-center gap-4 border-l-4 border-brand-orange shadow-sm hover:shadow-md transition-shadow cursor-pointer">
-                                    <div className="text-center shrink-0">
-                                        <span className="block text-[10px] font-bold text-brand-orange uppercase">OCT</span>
-                                        <span className="block text-xl font-bold text-brand-orange">24</span>
+                                {stats.upcomingSessions.length > 0 ? stats.upcomingSessions.map((sess, idx) => (
+                                    <div key={idx} className="bg-[#FFF8F0] p-4 rounded-xl flex items-center gap-4 border-l-4 border-brand-orange shadow-sm hover:shadow-md transition-shadow cursor-pointer">
+                                        <div className="text-center shrink-0">
+                                            <span className="block text-[10px] font-bold text-brand-orange uppercase">
+                                                {new Intl.DateTimeFormat('en-US', { month: 'short' }).format(new Date(sess.startTime))}
+                                            </span>
+                                            <span className="block text-xl font-bold text-brand-orange">
+                                                {new Date(sess.startTime).getDate()}
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <p className="font-bold text-brand-green text-sm">Therapy Session</p>
+                                            <p className="text-xs text-brand-green/60 font-medium mt-0.5">
+                                                {new Intl.DateTimeFormat('en-US', { hour: 'numeric', minute: '2-digit' }).format(new Date(sess.startTime))} - {new Intl.DateTimeFormat('en-US', { hour: 'numeric', minute: '2-digit' }).format(new Date(sess.endTime))}
+                                            </p>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <p className="font-bold text-brand-green text-sm">Therapy Session</p>
-                                        <p className="text-xs text-brand-green/60 font-medium mt-0.5">14:30 - 15:20</p>
-                                    </div>
-                                </div>
+                                )) : (
+                                    <div className="text-sm font-medium text-brand-green/60 italic text-center py-4 bg-gray-50 rounded-xl">No upcoming appointments</div>
+                                )}
                             </div>
                         </CardContent>
                     </Card>
