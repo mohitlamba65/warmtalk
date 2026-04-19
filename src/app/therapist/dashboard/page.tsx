@@ -1,24 +1,14 @@
-import Link from "next/link";
 import {
     Video,
     Clock,
-    Book,
-    Briefcase,
-    Target,
-    Headphones,
-    MessageCircle,
     FileText,
-    Calendar as CalendarIcon,
-    ArrowRight,
     TrendingUp,
     Users
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Calendar } from "@/components/ui/calendar";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
@@ -39,7 +29,7 @@ export default async function TherapistDashboardPage() {
                 <h1 className="text-3xl md:text-4xl font-serif font-bold text-brand-green tracking-tight">
                     Welcome back, {session.user?.name}!
                 </h1>
-                <p className="text-brand-green/70 mt-2 text-lg">Here's your practice overview for today.</p>
+                <p className="text-brand-green/70 mt-2 text-lg">Here&apos;s your practice overview for today.</p>
             </div>
 
             <div className="grid lg:grid-cols-3 gap-8">
@@ -160,7 +150,7 @@ export default async function TherapistDashboardPage() {
                             />
                             
                             <div className="mt-6 space-y-3 px-2">
-                                <h4 className="text-xs font-bold text-brand-green/50 uppercase tracking-wider mb-2">Today's Appointments</h4>
+                                <h4 className="text-xs font-bold text-brand-green/50 uppercase tracking-wider mb-2">Today&apos;s Appointments</h4>
                                 <div className="bg-[#F5FBF2] p-4 rounded-xl flex items-center gap-4 border-l-4 border-brand-green shadow-sm hover:shadow-md transition-shadow cursor-pointer">
                                     <div className="text-center shrink-0">
                                         <span className="block text-[10px] font-bold text-brand-green uppercase">OCT</span>

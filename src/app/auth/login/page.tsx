@@ -41,7 +41,12 @@ export default function LoginPage() {
             toast.success("Signed in successfully.");
             
             // Redirect based on role if possible, else default dashboard
-            if ((data?.user as any)?.role === "THERAPIST") {
+            const role =
+                typeof data?.user === "object" && data.user !== null && "role" in data.user
+                    ? (data.user as { role?: string }).role
+                    : undefined;
+
+            if (role === "THERAPIST") {
                 router.push("/therapist/dashboard");
             } else {
                 router.push("/dashboard");
@@ -164,7 +169,7 @@ export default function LoginPage() {
                         </form>
                         
                         <div className="mt-8 text-center text-sm relative z-10">
-                            <span className="text-gray-400">Don't have an account? </span>
+                            <span className="text-gray-400">Don&apos;t have an account? </span>
                             <Link href="/auth/register" className="text-brand-green font-bold hover:underline decoration-brand-orange/30 underline-offset-4">Sign up</Link>
                         </div>
                     </div>

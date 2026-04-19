@@ -76,7 +76,7 @@ function RegisterForm() {
         setIsSubmitting(true);
         try {
             // Role relies on upper-case UserRole Prisma Enums
-            const signUpPayload: any = { name, email, password, role };
+            const signUpPayload = { name, email, password, role };
 
             const { error } = await authClient.signUp.email(signUpPayload);
             if (error) { toast.error(error.message); return; }
@@ -120,8 +120,9 @@ function RegisterForm() {
                 toast.success("Profile fully created!");
                 router.push("/therapist/dashboard");
             }
-        } catch (err: any) {
-            toast.error(err.message || "Failed to save profile choices.");
+        } catch (err: unknown) {
+            const message = err instanceof Error ? err.message : "Failed to save profile choices.";
+            toast.error(message);
         } finally {
             setIsSubmitting(false);
         }
@@ -137,7 +138,7 @@ function RegisterForm() {
                     provider: "google",
                     callbackURL: nextUrl,
                 });
-            } catch (error) {
+            } catch {
                 toast.error("Failed to initialize Google Sign In.");
             } finally {
                 setIsGooglePending(false);
@@ -176,7 +177,7 @@ function RegisterForm() {
                     {step === 1 && (
                         <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
                             <div className="text-center mb-6">
-                                <h1 className="text-2xl sm:text-3xl font-serif font-bold text-brand-green">Let's get started</h1>
+                                <h1 className="text-2xl sm:text-3xl font-serif font-bold text-brand-green">Let&apos;s get started</h1>
                             </div>
 
                             <form onSubmit={handleAccountCreation} className="space-y-5">

@@ -1,8 +1,12 @@
 import { DisorderType } from "@prisma/client";
+import type {
+    AssignedTherapistRecord,
+    UpcomingSessionRecord,
+} from "@/modules/dashboard/repositories/dashboard.repository";
 
 export interface DashboardRepos {
-    getClientUpcomingSessions: (userId: string) => Promise<any[]>;
-    getAssignedTherapist: (userId: string) => Promise<any | null>;
+    getClientUpcomingSessions: (userId: string) => Promise<UpcomingSessionRecord[]>;
+    getAssignedTherapist: (userId: string) => Promise<AssignedTherapistRecord | null>;
     getUnreadMessageCount: (userId: string) => Promise<number>;
 }
 

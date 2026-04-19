@@ -1,27 +1,24 @@
 "use server";
 
-import { headers } from "next/headers";
-import { auth } from "@/lib/auth";
 import { getNextOnboardingPathForUser, submitOnboardingStep } from "@/modules/auth/services/auth.service";
+import { getSessionUser } from "@/modules/auth/services/session.service";
 import type { ActionResult } from "@/modules/auth/types";
 import { parseSignupRole, toSignupRole } from "@/modules/auth/types";
 
 export async function getOnboardingRedirectForSession(): Promise<string | null> {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
+  const user = await getSessionUser();
 
-  if (!session?.user) {
+  if (!user) {
     return null;
   }
 
-  const role = toSignupRole(session.user.role);
+  const role = toSignupRole(user.role);
 
   if (!role) {
     return null;
   }
 
-  return getNextOnboardingPathForUser(session.user.id, role);
+  return getNextOnboardingPathForUser(user.id, role);
 }
 
 export async function submitOnboardingStepAction(input: {
@@ -29,11 +26,9 @@ export async function submitOnboardingStepAction(input: {
   step: number;
   payload: unknown;
 }): Promise<ActionResult<{ nextPath: string | null; completed: boolean }>> {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
+  const user = await getSessionUser();
 
-  if (!session?.user) {
+  if (!user) {
     return {
       ok: false,
       error: {
@@ -59,7 +54,7 @@ export async function submitOnboardingStepAction(input: {
   }
 
   return submitOnboardingStep({
-    userId: session.user.id,
+    userId: user.id,
     role,
     step: input.step,
     payload: input.payload,

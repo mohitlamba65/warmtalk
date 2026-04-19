@@ -47,3 +47,6 @@ export const dashboardRepository = {
         });
     }
 };
+
+export type UpcomingSessionRecord = Awaited<ReturnType<typeof dashboardRepository.getClientUpcomingSessions>>[number];
+export type AssignedTherapistRecord = NonNullable<Awaited<ReturnType<typeof dashboardRepository.getAssignedTherapist>>>;

@@ -1,19 +1,14 @@
 
-import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
+"use server";
+
 import { getUserDashboardStats } from "@/modules/dashboard/services/dashboard.service";
 import { dashboardRepository } from "@/modules/dashboard/repositories/dashboard.repository";
+import { requireSessionUser } from "@/modules/auth/services/session.service";
 
 export async function getDashboardDataAction() {
-    const session = await auth.api.getSession({
-        headers: await headers()
-    });
-
-    if (!session?.user) {
-        throw new Error("Unauthorized");
-    }
+    const user = await requireSessionUser();
 
     // Inject the concrete repository implementations into the decoupled service layer
-    const data = await getUserDashboardStats(session.user.id, dashboardRepository);
+    const data = await getUserDashboardStats(user.id, dashboardRepository);
     return data;
 }

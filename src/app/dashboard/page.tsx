@@ -1,4 +1,3 @@
-import Link from "next/link";
 import {
     Video,
     Clock,
@@ -12,7 +11,7 @@ import {
     ArrowRight
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Calendar } from "@/components/ui/calendar";
@@ -125,7 +124,9 @@ export default async function DashboardPage() {
                                         {stats.assignedTherapist && <p className="text-brand-green/70 font-medium">Licensed Therapist • {stats.assignedTherapist.yearsExperience || 0} years exp</p>}
                                     </div>
                                     <p className="text-sm text-brand-green/80 leading-relaxed italic bg-gray-50 p-4 rounded-xl border-l-4 border-brand-orange">
-                                        "{stats.assignedTherapist?.bio || "We are currently pairing you with the perfect professional."}"
+                                        <span aria-hidden="true">&ldquo;</span>
+                                        {stats.assignedTherapist?.bio || "We are currently pairing you with the perfect professional."}
+                                        <span aria-hidden="true">&rdquo;</span>
                                     </p>
                                     <div className="flex flex-wrap gap-2 pt-2">
                                         {stats.assignedTherapist?.specialties.map(spec => (

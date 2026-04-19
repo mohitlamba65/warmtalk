@@ -74,7 +74,7 @@ export default function ProviderDashboardPage() {
                 {/* Left Column: Schedule (2 cols wide) */}
                 <div className="lg:col-span-2 space-y-8">
                     <div className="flex items-center justify-between">
-                        <h2 className="text-lg font-bold text-gray-900">Today's Schedule</h2>
+                        <h2 className="text-lg font-bold text-gray-900">Today&apos;s Schedule</h2>
                         <Button variant="link" className="text-brand-orange font-bold text-sm">View Calendar</Button>
                     </div>
 
@@ -197,7 +197,7 @@ export default function ProviderDashboardPage() {
                             </div>
                             <h3 className="font-bold text-lg mb-2">Clinical Note</h3>
                             <p className="text-sm text-gray-300 leading-relaxed mb-6">
-                                You have 3 unsigned notes from yesterday's sessions. Please review them before the end of the week.
+                                You have 3 unsigned notes from yesterday&apos;s sessions. Please review them before the end of the week.
                             </p>
                             <Button variant="link" className="p-0 h-auto text-brand-orange font-bold text-sm hover:text-white transition-colors group">
                                 Review Now <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />

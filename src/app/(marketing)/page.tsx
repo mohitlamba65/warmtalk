@@ -7,7 +7,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -24,7 +23,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 export default function Home() {
   return (
@@ -54,7 +53,7 @@ export default function Home() {
               </h1>
               
               <p className="text-lg md:text-xl text-brand-green/80 max-w-xl mx-auto lg:mx-0 leading-relaxed font-medium">
-                No algorithmic matching. Real human connections. Start your journey with a free 5-minute 'Vibe Check' video call with verified professionals.
+                No algorithmic matching. Real human connections. Start your journey with a free 5-minute &apos;Vibe Check&apos; video call with verified professionals.
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-4">
@@ -126,7 +125,7 @@ export default function Home() {
               </div>
               <div>
                 <h4 className="font-bold text-brand-green">No Hidden Fees</h4>
-                <p className="text-sm text-brand-green/70">Pay exactly what's quoted. Always.</p>
+                <p className="text-sm text-brand-green/70">Pay exactly what&apos;s quoted. Always.</p>
               </div>
             </div>
           </div>
@@ -153,7 +152,7 @@ export default function Home() {
               </CardHeader>
               <CardContent className="pb-8">
                 <p className="text-center text-brand-green/80 mt-2">
-                  Stop paying for first sessions with therapists who aren't a fit. Schedule free 5-minute video intro calls with multiple providers until you find "the one."
+                  Stop paying for first sessions with therapists who aren&apos;t a fit. Schedule free 5-minute video intro calls with multiple providers until you find &quot;the one.&quot;
                 </p>
               </CardContent>
             </Card>
@@ -187,11 +186,11 @@ export default function Home() {
                   <HeartHandshake className="w-8 h-8 text-red-500" />
                 </div>
                 <CardTitle className="text-2xl font-bold text-brand-green font-serif">Crisis Support</CardTitle>
-                <CardDescription className="text-brand-green/70 text-base">We're here when you need us.</CardDescription>
+                <CardDescription className="text-brand-green/70 text-base">We&apos;re here when you need us.</CardDescription>
               </CardHeader>
               <CardContent className="pb-8">
                 <p className="text-center text-brand-green/80 mt-2 mb-6">
-                  Mental health doesn't operate on a 9-to-5 schedule. Access our trained crisis response team 24/7 if you need immediate assistance between sessions.
+                  Mental health doesn&apos;t operate on a 9-to-5 schedule. Access our trained crisis response team 24/7 if you need immediate assistance between sessions.
                 </p>
                 <Button variant="outline" className="w-full text-red-600 border-red-200 hover:bg-red-50 font-bold rounded-xl h-12">
                   Get Help Now
@@ -209,7 +208,7 @@ export default function Home() {
           <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
             <div className="max-w-2xl">
               <Badge variant="outline" className="border-brand-green/20 text-brand-green mb-4">Patient Stories</Badge>
-              <h2 className="text-3xl md:text-5xl font-serif font-bold text-brand-green">Don't take our word for it</h2>
+              <h2 className="text-3xl md:text-5xl font-serif font-bold text-brand-green">Don&apos;t take our word for it</h2>
             </div>
           </div>
 
@@ -248,7 +247,7 @@ export default function Home() {
                         <div>
                           <Star className="w-6 h-6 text-brand-orange fill-brand-orange mb-6" />
                           <p className="text-lg text-brand-green/80 italic leading-relaxed mb-8">
-                            "{testimonial.quote}"
+                            &ldquo;{testimonial.quote}&rdquo;
                           </p>
                         </div>
                         <div className="flex items-center gap-4">
@@ -290,7 +289,7 @@ export default function Home() {
                 How does the 5-minute Vibe Check work?
               </AccordionTrigger>
               <AccordionContent className="text-brand-green/70 text-base leading-relaxed">
-                A Vibe Check is a free, 5-minute intro video call. You can schedule up to 3 of these with different therapists before committing to a full session. It's meant to help you ask basic questions, gauge their personality, and see if you feel comfortable talking to them.
+                A Vibe Check is a free, 5-minute intro video call. You can schedule up to 3 of these with different therapists before committing to a full session. It&apos;s meant to help you ask basic questions, gauge their personality, and see if you feel comfortable talking to them.
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-2" className="border-b-brand-green/10 py-2">

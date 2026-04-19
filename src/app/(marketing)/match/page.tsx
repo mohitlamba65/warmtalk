@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
 import { ArrowLeft, ArrowRight, Sparkles, Heart, Brain, Shield, Zap, Sun, Users } from "lucide-react";
 
 // --- Data Definitions ---

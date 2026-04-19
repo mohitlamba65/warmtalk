@@ -1,4 +1,3 @@
-import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -24,7 +23,7 @@ export default function MessagesPage() {
                                     <h3 className="font-bold text-sm text-gray-900 truncate">Dr. Carter</h3>
                                     <span className="text-xs font-bold text-brand-orange">10:42 AM</span>
                                 </div>
-                                <p className="text-xs text-gray-500 truncate">Let's verify your next session time.</p>
+                                <p className="text-xs text-gray-500 truncate">Let&apos;s verify your next session time.</p>
                             </div>
                         </div>
                     </div>
