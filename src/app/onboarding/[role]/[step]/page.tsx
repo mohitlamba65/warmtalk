@@ -17,14 +17,14 @@ export default async function OnboardingRoleStepPage({ params }: Props) {
   });
 
   if (!session?.user) {
-    redirect("/auth/login?callbackUrl=/onboarding/client/1");
+    redirect("/auth/register?reason=complete-signup");
   }
 
   const requestedRole = parseSignupRole(routeParams.role);
   const sessionRole = toSignupRole(session.user.role);
 
   if (!sessionRole) {
-    redirect("/auth/login");
+    redirect("/auth/register?reason=complete-signup");
   }
 
   if (!requestedRole) {

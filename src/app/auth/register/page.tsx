@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
 import { Loader2, User, Mail, Lock, CheckCircle2, Zap, Sun, Shield, Brain, Heart, Sparkles, Users } from "lucide-react";
-import { useState, Suspense } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { authClient } from "@/lib/auth-client";
 import { useRouter, useSearchParams } from "next/navigation";
 import { saveClientProfile, saveTherapistProfile } from "@/app/actions/profiles";
@@ -42,6 +42,13 @@ function ProgressDivider({ active }: { active: boolean }) {
 function RegisterForm() {
     const router = useRouter();
     const searchParams = useSearchParams();
+    const redirectReason = searchParams.get("reason");
+
+    useEffect(() => {
+        if (redirectReason === "complete-signup") {
+            toast.error("Please complete signup first.");
+        }
+    }, [redirectReason]);
 
     // Recover ongoing state from URL (if recovering from Google OAuth callback)
     const initialStep = Number(searchParams.get("step")) || 1;

@@ -10,7 +10,7 @@ export default async function OnboardingEntryPage() {
   });
 
   if (!session?.user) {
-    redirect("/auth/login?callbackUrl=/onboarding/client/1");
+    redirect("/auth/register?reason=complete-signup");
   }
 
   const role = toSignupRole(session.user.role);
