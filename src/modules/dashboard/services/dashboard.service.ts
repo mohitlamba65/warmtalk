@@ -1,4 +1,4 @@
-import { DisorderType } from "@prisma/client";
+import { DisorderType } from "@/generated/prisma/client";
 import type {
     AssignedTherapistRecord,
     UpcomingSessionRecord,
